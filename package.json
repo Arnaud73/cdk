@@ -23,8 +23,8 @@
   },
   "homepage": "https://github.com/angular/material2#readme",
   "peerDependencies": {
-    "@angular/core": "^5.0.0",
-    "@angular/common": "^5.0.0"
+    "@angular/core": "~4.4.4",
+    "@angular/common": "~4.4.4"
   },
   "dependencies": {
     "tslib": "^1.7.1"

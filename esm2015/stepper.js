@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,14 +8,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, Directive, EventEmitter, Inject, Input, NgModule, Optional, Output, TemplateRef, ViewChild, ViewEncapsulation, forwardRef } from '@angular/core';
 import { ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@angular/cdk/keycodes';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import '@angular/forms';
 import { BidiModule, Directionality } from '@angular/cdk/bidi';
 import { CommonModule } from '@angular/common';
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 
 class CdkStepLabel {
     /**
@@ -30,15 +24,12 @@ CdkStepLabel.decorators = [
                 selector: '[cdkStepLabel]',
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 CdkStepLabel.ctorParameters = () => [
     { type: TemplateRef, },
 ];
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 
 /**
  * Used to generate unique ID for each stepper component.
@@ -64,7 +55,6 @@ class CdkStep {
         this._customCompleted = null;
     }
     /**
-     * Whether the user can return to this step once it has been marked as complted.
      * @return {?}
      */
     get editable() { return this._editable; }
@@ -76,7 +66,7 @@ class CdkStep {
         this._editable = coerceBooleanProperty(value);
     }
     /**
-     * Whether the completion of step is optional.
+     * Whether the completion of step is optional or not.
      * @return {?}
      */
     get optional() { return this._optional; }
@@ -88,7 +78,7 @@ class CdkStep {
         this._optional = coerceBooleanProperty(value);
     }
     /**
-     * Whether step is marked as completed.
+     * Return whether step is completed or not.
      * @return {?}
      */
     get completed() {
@@ -132,18 +122,20 @@ CdkStep.decorators = [
                 changeDetection: ChangeDetectionStrategy.OnPush,
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 CdkStep.ctorParameters = () => [
     { type: CdkStepper, decorators: [{ type: Inject, args: [forwardRef(() => CdkStepper),] },] },
 ];
 CdkStep.propDecorators = {
-    "stepLabel": [{ type: ContentChild, args: [CdkStepLabel,] },],
-    "content": [{ type: ViewChild, args: [TemplateRef,] },],
-    "stepControl": [{ type: Input },],
-    "label": [{ type: Input },],
-    "editable": [{ type: Input },],
-    "optional": [{ type: Input },],
-    "completed": [{ type: Input },],
+    'stepLabel': [{ type: ContentChild, args: [CdkStepLabel,] },],
+    'content': [{ type: ViewChild, args: [TemplateRef,] },],
+    'stepControl': [{ type: Input },],
+    'label': [{ type: Input },],
+    'editable': [{ type: Input },],
+    'optional': [{ type: Input },],
+    'completed': [{ type: Input },],
 };
 class CdkStepper {
     /**
@@ -185,19 +177,14 @@ class CdkStepper {
      * @return {?}
      */
     set selectedIndex(index) {
-        if (this._steps) {
-            if (this._anyControlsInvalid(index) || index < this._selectedIndex &&
-                !this._steps.toArray()[index].editable) {
-                // remove focus from clicked step header if the step is not able to be selected
-                this._stepHeader.toArray()[index].nativeElement.blur();
-            }
-            else if (this._selectedIndex != index) {
-                this._emitStepperSelectionEvent(index);
-                this._focusIndex = this._selectedIndex;
-            }
+        if (this._anyControlsInvalid(index)
+            || index < this._selectedIndex && !this._steps.toArray()[index].editable) {
+            // remove focus from clicked step header if the step is not able to be selected
+            this._stepHeader.toArray()[index].nativeElement.blur();
         }
-        else {
-            this._selectedIndex = this._focusIndex = index;
+        else if (this._selectedIndex != index) {
+            this._emitStepperSelectionEvent(index);
+            this._focusIndex = this._selectedIndex;
         }
     }
     /**
@@ -232,7 +219,7 @@ class CdkStepper {
      * @return {?}
      */
     _getStepLabelId(i) {
-        return `cdk-step-label-${this._groupId}-${i}`;
+        return `mat-step-label-${this._groupId}-${i}`;
     }
     /**
      * Returns unique id for each step content element.
@@ -240,7 +227,7 @@ class CdkStepper {
      * @return {?}
      */
     _getStepContentId(i) {
-        return `cdk-step-content-${this._groupId}-${i}`;
+        return `mat-step-content-${this._groupId}-${i}`;
     }
     /**
      * Marks the component to be change detected.
@@ -350,10 +337,9 @@ class CdkStepper {
      * @return {?}
      */
     _anyControlsInvalid(index) {
-        const /** @type {?} */ steps = this._steps.toArray();
-        steps[this._selectedIndex].interacted = true;
+        this._steps.toArray()[this._selectedIndex].interacted = true;
         if (this._linear && index >= 0) {
-            return steps.slice(0, index).some(step => step.stepControl && step.stepControl.invalid);
+            return this._steps.toArray().slice(0, index).some(step => step.stepControl.invalid);
         }
         return false;
     }
@@ -370,23 +356,20 @@ CdkStepper.decorators = [
                 exportAs: 'cdkStepper',
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 CdkStepper.ctorParameters = () => [
     { type: Directionality, decorators: [{ type: Optional },] },
     { type: ChangeDetectorRef, },
 ];
 CdkStepper.propDecorators = {
-    "_steps": [{ type: ContentChildren, args: [CdkStep,] },],
-    "linear": [{ type: Input },],
-    "selectedIndex": [{ type: Input },],
-    "selected": [{ type: Input },],
-    "selectionChange": [{ type: Output },],
+    '_steps': [{ type: ContentChildren, args: [CdkStep,] },],
+    'linear': [{ type: Input },],
+    'selectedIndex': [{ type: Input },],
+    'selected': [{ type: Input },],
+    'selectionChange': [{ type: Output },],
 };
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 
 /**
  * Button that moves to the next step in a stepper workflow.
@@ -405,7 +388,9 @@ CdkStepperNext.decorators = [
                 host: { '(click)': '_stepper.next()' }
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 CdkStepperNext.ctorParameters = () => [
     { type: CdkStepper, },
 ];
@@ -426,15 +411,12 @@ CdkStepperPrevious.decorators = [
                 host: { '(click)': '_stepper.previous()' }
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 CdkStepperPrevious.ctorParameters = () => [
     { type: CdkStepper, },
 ];
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 
 class CdkStepperModule {
 }
@@ -445,18 +427,11 @@ CdkStepperModule.decorators = [
                 declarations: [CdkStep, CdkStepper, CdkStepLabel, CdkStepperNext, CdkStepperPrevious]
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 CdkStepperModule.ctorParameters = () => [];
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 /**
  * Generated bundle index. Do not edit.
  */

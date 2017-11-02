@@ -1,52 +1,50 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/Subject'), require('rxjs/operators/debounceTime')) :
-	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'rxjs/Subject', 'rxjs/operators/debounceTime'], factory) :
-	(factory((global.ng = global.ng || {}, global.ng.cdk = global.ng.cdk || {}, global.ng.cdk.observers = global.ng.cdk.observers || {}),global.ng.core,global.Rx,global.Rx.Observable));
-}(this, (function (exports,_angular_core,rxjs_Subject,rxjs_operators_debounceTime) { 'use strict';
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/Subject'), require('@angular/cdk/rxjs')) :
+	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'rxjs/Subject', '@angular/cdk/rxjs'], factory) :
+	(factory((global.ng = global.ng || {}, global.ng.cdk = global.ng.cdk || {}, global.ng.cdk.observers = global.ng.cdk.observers || {}),global.ng.core,global.Rx,global.ng.cdk.rxjs));
+}(this, (function (exports,_angular_core,rxjs_Subject,_angular_cdk_rxjs) { 'use strict';
 
 /**
  * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.
  * \@docs-private
  */
-var MutationObserverFactory = (function () {
-    function MutationObserverFactory() {
+var MatMutationObserverFactory = (function () {
+    function MatMutationObserverFactory() {
     }
     /**
      * @param {?} callback
      * @return {?}
      */
-    MutationObserverFactory.prototype.create = /**
-     * @param {?} callback
-     * @return {?}
-     */
-    function (callback) {
+    MatMutationObserverFactory.prototype.create = function (callback) {
         return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);
     };
-    MutationObserverFactory.decorators = [
+    MatMutationObserverFactory.decorators = [
         { type: _angular_core.Injectable },
     ];
-    /** @nocollapse */
-    MutationObserverFactory.ctorParameters = function () { return []; };
-    return MutationObserverFactory;
+    /**
+     * @nocollapse
+     */
+    MatMutationObserverFactory.ctorParameters = function () { return []; };
+    return MatMutationObserverFactory;
 }());
 /**
  * Directive that triggers a callback whenever the content of
  * its associated element has changed.
  */
-var CdkObserveContent = (function () {
-    function CdkObserveContent(_mutationObserverFactory, _elementRef, _ngZone) {
+var ObserveContent = (function () {
+    /**
+     * @param {?} _mutationObserverFactory
+     * @param {?} _elementRef
+     * @param {?} _ngZone
+     */
+    function ObserveContent(_mutationObserverFactory, _elementRef, _ngZone) {
         this._mutationObserverFactory = _mutationObserverFactory;
         this._elementRef = _elementRef;
         this._ngZone = _ngZone;
@@ -62,14 +60,12 @@ var CdkObserveContent = (function () {
     /**
      * @return {?}
      */
-    CdkObserveContent.prototype.ngAfterContentInit = /**
-     * @return {?}
-     */
-    function () {
+    ObserveContent.prototype.ngAfterContentInit = function () {
         var _this = this;
         if (this.debounce > 0) {
             this._ngZone.runOutsideAngular(function () {
-                _this._debouncer.pipe(rxjs_operators_debounceTime.debounceTime(_this.debounce))
+                _angular_cdk_rxjs.RxChain.from(_this._debouncer)
+                    .call(_angular_cdk_rxjs.debounceTime, _this.debounce)
                     .subscribe(function (mutations) { return _this.event.emit(mutations); });
             });
         }
@@ -92,51 +88,51 @@ var CdkObserveContent = (function () {
     /**
      * @return {?}
      */
-    CdkObserveContent.prototype.ngOnDestroy = /**
-     * @return {?}
-     */
-    function () {
+    ObserveContent.prototype.ngOnDestroy = function () {
         if (this._observer) {
             this._observer.disconnect();
         }
         this._debouncer.complete();
     };
-    CdkObserveContent.decorators = [
+    ObserveContent.decorators = [
         { type: _angular_core.Directive, args: [{
                     selector: '[cdkObserveContent]',
                     exportAs: 'cdkObserveContent',
                 },] },
     ];
-    /** @nocollapse */
-    CdkObserveContent.ctorParameters = function () { return [
-        { type: MutationObserverFactory, },
+    /**
+     * @nocollapse
+     */
+    ObserveContent.ctorParameters = function () { return [
+        { type: MatMutationObserverFactory, },
         { type: _angular_core.ElementRef, },
         { type: _angular_core.NgZone, },
     ]; };
-    CdkObserveContent.propDecorators = {
-        "event": [{ type: _angular_core.Output, args: ['cdkObserveContent',] },],
-        "debounce": [{ type: _angular_core.Input },],
+    ObserveContent.propDecorators = {
+        'event': [{ type: _angular_core.Output, args: ['cdkObserveContent',] },],
+        'debounce': [{ type: _angular_core.Input },],
     };
-    return CdkObserveContent;
+    return ObserveContent;
 }());
 var ObserversModule = (function () {
     function ObserversModule() {
     }
     ObserversModule.decorators = [
         { type: _angular_core.NgModule, args: [{
-                    exports: [CdkObserveContent],
-                    declarations: [CdkObserveContent],
-                    providers: [MutationObserverFactory]
+                    exports: [ObserveContent],
+                    declarations: [ObserveContent],
+                    providers: [MatMutationObserverFactory]
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     ObserversModule.ctorParameters = function () { return []; };
     return ObserversModule;
 }());
 
-exports.ObserveContent = CdkObserveContent;
-exports.MutationObserverFactory = MutationObserverFactory;
-exports.CdkObserveContent = CdkObserveContent;
+exports.MatMutationObserverFactory = MatMutationObserverFactory;
+exports.ObserveContent = ObserveContent;
 exports.ObserversModule = ObserversModule;
 
 Object.defineProperty(exports, '__esModule', { value: true });

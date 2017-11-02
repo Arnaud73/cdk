@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -107,10 +107,7 @@ export declare class CdkTable<T> implements CollectionViewer {
      * Create the embedded view for the header template and place it in the header row view container.
      */
     private _renderHeaderRow();
-    /**
-     * Check for changes made in the data and render each change (row added/removed/moved) and update
-     * row contexts.
-     */
+    /** Check for changes made in the data and render each change (row added/removed/moved). */
     private _renderRowChanges();
     /**
      * Finds the matching row definition that should be used for this row data. If there is only
@@ -125,10 +122,11 @@ export declare class CdkTable<T> implements CollectionViewer {
      */
     private _insertRow(rowData, index);
     /**
-     * Updates the index-related context for each row to reflect any changes in the index of the rows,
-     * e.g. first/last/even/odd.
+     * Updates the context for each row to reflect any data changes that may have caused
+     * rows to be added, removed, or moved. The view container contains the same context
+     * that was provided to each of its cells.
      */
-    private _updateRowIndexContext();
+    private _updateRowContext();
     /**
      * Returns the cell template definitions to insert into the header
      * as defined by its list of columns to display.

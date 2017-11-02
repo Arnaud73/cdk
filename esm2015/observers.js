@@ -1,24 +1,19 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 import { Directive, ElementRef, EventEmitter, Injectable, Input, NgModule, NgZone, Output } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import { debounceTime } from 'rxjs/operators/debounceTime';
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
+import { RxChain, debounceTime } from '@angular/cdk/rxjs';
 
 /**
  * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.
  * \@docs-private
  */
-class MutationObserverFactory {
+class MatMutationObserverFactory {
     /**
      * @param {?} callback
      * @return {?}
@@ -27,16 +22,18 @@ class MutationObserverFactory {
         return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);
     }
 }
-MutationObserverFactory.decorators = [
+MatMutationObserverFactory.decorators = [
     { type: Injectable },
 ];
-/** @nocollapse */
-MutationObserverFactory.ctorParameters = () => [];
+/**
+ * @nocollapse
+ */
+MatMutationObserverFactory.ctorParameters = () => [];
 /**
  * Directive that triggers a callback whenever the content of
  * its associated element has changed.
  */
-class CdkObserveContent {
+class ObserveContent {
     /**
      * @param {?} _mutationObserverFactory
      * @param {?} _elementRef
@@ -61,7 +58,8 @@ class CdkObserveContent {
     ngAfterContentInit() {
         if (this.debounce > 0) {
             this._ngZone.runOutsideAngular(() => {
-                this._debouncer.pipe(debounceTime(this.debounce))
+                RxChain.from(this._debouncer)
+                    .call(debounceTime, this.debounce)
                     .subscribe((mutations) => this.event.emit(mutations));
             });
         }
@@ -91,46 +89,41 @@ class CdkObserveContent {
         this._debouncer.complete();
     }
 }
-CdkObserveContent.decorators = [
+ObserveContent.decorators = [
     { type: Directive, args: [{
                 selector: '[cdkObserveContent]',
                 exportAs: 'cdkObserveContent',
             },] },
 ];
-/** @nocollapse */
-CdkObserveContent.ctorParameters = () => [
-    { type: MutationObserverFactory, },
+/**
+ * @nocollapse
+ */
+ObserveContent.ctorParameters = () => [
+    { type: MatMutationObserverFactory, },
     { type: ElementRef, },
     { type: NgZone, },
 ];
-CdkObserveContent.propDecorators = {
-    "event": [{ type: Output, args: ['cdkObserveContent',] },],
-    "debounce": [{ type: Input },],
+ObserveContent.propDecorators = {
+    'event': [{ type: Output, args: ['cdkObserveContent',] },],
+    'debounce': [{ type: Input },],
 };
 class ObserversModule {
 }
 ObserversModule.decorators = [
     { type: NgModule, args: [{
-                exports: [CdkObserveContent],
-                declarations: [CdkObserveContent],
-                providers: [MutationObserverFactory]
+                exports: [ObserveContent],
+                declarations: [ObserveContent],
+                providers: [MatMutationObserverFactory]
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 ObserversModule.ctorParameters = () => [];
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 /**
  * Generated bundle index. Do not edit.
  */
 
-export { CdkObserveContent as ObserveContent, MutationObserverFactory, CdkObserveContent, ObserversModule };
+export { MatMutationObserverFactory, ObserveContent, ObserversModule };
 //# sourceMappingURL=observers.js.map

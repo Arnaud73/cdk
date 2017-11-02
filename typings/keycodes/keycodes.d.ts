@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -23,4 +23,3 @@ export declare const A = 65;
 export declare const Z = 90;
 export declare const ZERO = 48;
 export declare const NINE = 91;
-export declare const COMMA = 188;

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -10,11 +10,6 @@
 	typeof define === 'function' && define.amd ? define(['exports'], factory) :
 	(factory((global.ng = global.ng || {}, global.ng.cdk = global.ng.cdk || {}, global.ng.cdk.keycodes = global.ng.cdk.keycodes || {})));
 }(this, (function (exports) { 'use strict';
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 
 var UP_ARROW = 38;
 var DOWN_ARROW = 40;
@@ -34,7 +29,6 @@ var A = 65;
 var Z = 90;
 var ZERO = 48;
 var NINE = 91;
-var COMMA = 188;
 
 exports.UP_ARROW = UP_ARROW;
 exports.DOWN_ARROW = DOWN_ARROW;
@@ -54,7 +48,6 @@ exports.A = A;
 exports.Z = Z;
 exports.ZERO = ZERO;
 exports.NINE = NINE;
-exports.COMMA = COMMA;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

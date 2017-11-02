@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,7 +8,7 @@
 import { PositionStrategy } from './position/position-strategy';
 import { Direction } from '@angular/cdk/bidi';
 import { ScrollStrategy } from './scroll/scroll-strategy';
-/** Initial configuration used when creating an overlay. */
+/** OverlayConfig captures the initial configuration used when opening an overlay. */
 export declare class OverlayConfig {
     /** Strategy with which to position the overlay. */
     positionStrategy?: PositionStrategy;

@@ -1,20 +1,15 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('@angular/cdk/platform'), require('rxjs/Subject'), require('rxjs/operators/map'), require('rxjs/operators/startWith'), require('rxjs/operators/takeUntil'), require('@angular/cdk/coercion'), require('rxjs/observable/combineLatest'), require('rxjs/observable/fromEventPattern')) :
-	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', '@angular/cdk/platform', 'rxjs/Subject', 'rxjs/operators/map', 'rxjs/operators/startWith', 'rxjs/operators/takeUntil', '@angular/cdk/coercion', 'rxjs/observable/combineLatest', 'rxjs/observable/fromEventPattern'], factory) :
-	(factory((global.ng = global.ng || {}, global.ng.cdk = global.ng.cdk || {}, global.ng.cdk.layout = global.ng.cdk.layout || {}),global.ng.core,global.ng.cdk.platform,global.Rx,global.Rx.Observable,global.Rx.Observable,global.Rx.Observable,global.ng.cdk.coercion,global.Rx.Observable,global.Rx.Observable));
-}(this, (function (exports,_angular_core,_angular_cdk_platform,rxjs_Subject,rxjs_operators_map,rxjs_operators_startWith,rxjs_operators_takeUntil,_angular_cdk_coercion,rxjs_observable_combineLatest,rxjs_observable_fromEventPattern) { 'use strict';
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('@angular/cdk/platform'), require('rxjs/Subject'), require('@angular/cdk/rxjs'), require('@angular/cdk/coercion'), require('rxjs/observable/combineLatest'), require('rxjs/observable/fromEventPattern')) :
+	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', '@angular/cdk/platform', 'rxjs/Subject', '@angular/cdk/rxjs', '@angular/cdk/coercion', 'rxjs/observable/combineLatest', 'rxjs/observable/fromEventPattern'], factory) :
+	(factory((global.ng = global.ng || {}, global.ng.cdk = global.ng.cdk || {}, global.ng.cdk.layout = global.ng.cdk.layout || {}),global.ng.core,global.ng.cdk.platform,global.Rx,global.ng.cdk.rxjs,global.ng.cdk.coercion,global.Rx.Observable,global.Rx.Observable));
+}(this, (function (exports,_angular_core,_angular_cdk_platform,rxjs_Subject,_angular_cdk_rxjs,_angular_cdk_coercion,rxjs_observable_combineLatest,rxjs_observable_fromEventPattern) { 'use strict';
 
 /**
  * Global registry for all dynamically-created, injected style tags.
@@ -24,6 +19,9 @@ var styleElementForWebkitCompatibility = new Map();
  * A utility for calling matchMedia queries.
  */
 var MediaMatcher = (function () {
+    /**
+     * @param {?} platform
+     */
     function MediaMatcher(platform) {
         this.platform = platform;
         this._matchMedia = this.platform.isBrowser ?
@@ -33,28 +31,12 @@ var MediaMatcher = (function () {
             noopMatchMedia;
     }
     /**
-     * Evaluates the given media query and returns the native MediaQueryList from which results
-     * can be retrieved.
-     * Confirms the layout engine will trigger for the selector query provided and returns the
-     * MediaQueryList for the query provided.
-     */
-    /**
-     * Evaluates the given media query and returns the native MediaQueryList from which results
-     * can be retrieved.
      * Confirms the layout engine will trigger for the selector query provided and returns the
      * MediaQueryList for the query provided.
      * @param {?} query
      * @return {?}
      */
-    MediaMatcher.prototype.matchMedia = /**
-     * Evaluates the given media query and returns the native MediaQueryList from which results
-     * can be retrieved.
-     * Confirms the layout engine will trigger for the selector query provided and returns the
-     * MediaQueryList for the query provided.
-     * @param {?} query
-     * @return {?}
-     */
-    function (query) {
+    MediaMatcher.prototype.matchMedia = function (query) {
         if (this.platform.WEBKIT) {
             createEmptyStyleRule(query);
         }
@@ -63,7 +45,9 @@ var MediaMatcher = (function () {
     MediaMatcher.decorators = [
         { type: _angular_core.Injectable },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     MediaMatcher.ctorParameters = function () { return [
         { type: _angular_cdk_platform.Platform, },
     ]; };
@@ -88,7 +72,7 @@ function createEmptyStyleRule(query) {
             // Store in private global registry
             styleElementForWebkitCompatibility.set(query, style);
         }
-        catch (/** @type {?} */ e) {
+        catch (e) {
             console.error(e);
         }
     }
@@ -108,19 +92,13 @@ function noopMatchMedia(query) {
 }
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
- * The current state of a layout breakpoint.
- * @record
- */
-
-/**
  * Utility for checking the matching state of \@media queries.
  */
 var BreakpointObserver = (function () {
+    /**
+     * @param {?} mediaMatcher
+     * @param {?} zone
+     */
     function BreakpointObserver(mediaMatcher, zone) {
         this.mediaMatcher = mediaMatcher;
         this.zone = zone;
@@ -133,35 +111,20 @@ var BreakpointObserver = (function () {
          */
         this._destroySubject = new rxjs_Subject.Subject();
     }
-    /** Completes the active subject, signalling to all other observables to complete. */
     /**
      * Completes the active subject, signalling to all other observables to complete.
      * @return {?}
      */
-    BreakpointObserver.prototype.ngOnDestroy = /**
-     * Completes the active subject, signalling to all other observables to complete.
-     * @return {?}
-     */
-    function () {
+    BreakpointObserver.prototype.ngOnDestroy = function () {
         this._destroySubject.next();
         this._destroySubject.complete();
     };
     /**
-     * Whether one or more media queries match the current viewport size.
-     * @param value One or more media queries to check.
-     * @returns Whether any of the media queries match.
+     * Whether the query currently is matched.
+     * @param {?} value
+     * @return {?}
      */
-    /**
-     * Whether one or more media queries match the current viewport size.
-     * @param {?} value One or more media queries to check.
-     * @return {?} Whether any of the media queries match.
-     */
-    BreakpointObserver.prototype.isMatched = /**
-     * Whether one or more media queries match the current viewport size.
-     * @param {?} value One or more media queries to check.
-     * @return {?} Whether any of the media queries match.
-     */
-    function (value) {
+    BreakpointObserver.prototype.isMatched = function (value) {
         var _this = this;
         var /** @type {?} */ queries = _angular_cdk_coercion.coerceArray(value);
         return queries.some(function (mediaQuery) { return _this._registerQuery(mediaQuery).mql.matches; });
@@ -169,21 +132,10 @@ var BreakpointObserver = (function () {
     /**
      * Gets an observable of results for the given queries that will emit new results for any changes
      * in matching of the given queries.
-     * @returns A stream of matches for the given queries.
-     */
-    /**
-     * Gets an observable of results for the given queries that will emit new results for any changes
-     * in matching of the given queries.
      * @param {?} value
-     * @return {?} A stream of matches for the given queries.
+     * @return {?}
      */
-    BreakpointObserver.prototype.observe = /**
-     * Gets an observable of results for the given queries that will emit new results for any changes
-     * in matching of the given queries.
-     * @param {?} value
-     * @return {?} A stream of matches for the given queries.
-     */
-    function (value) {
+    BreakpointObserver.prototype.observe = function (value) {
         var _this = this;
         var /** @type {?} */ queries = _angular_cdk_coercion.coerceArray(value);
         var /** @type {?} */ observables = queries.map(function (query) { return _this._registerQuery(query).observable; });
@@ -198,25 +150,15 @@ var BreakpointObserver = (function () {
      * @param {?} query
      * @return {?}
      */
-    BreakpointObserver.prototype._registerQuery = /**
-     * Registers a specific query to be listened for.
-     * @param {?} query
-     * @return {?}
-     */
-    function (query) {
+    BreakpointObserver.prototype._registerQuery = function (query) {
         var _this = this;
         // Only set up a new MediaQueryList if it is not already being listened for.
         if (this._queries.has(query)) {
-            return /** @type {?} */ ((this._queries.get(query)));
+            return ((this._queries.get(query)));
         }
         var /** @type {?} */ mql = this.mediaMatcher.matchMedia(query);
         // Create callback for match changes and add it is as a listener.
-        var /** @type {?} */ queryObservable = rxjs_observable_fromEventPattern.fromEventPattern(
-        // Listener callback methods are wrapped to be placed back in ngZone. Callbacks must be placed
-        // back into the zone because matchMedia is only included in Zone.js by loading the
-        // webapis-media-query.js file alongside the zone.js file.  Additionally, some browsers do not
-        // have MediaQueryList inherit from EventTarget, which causes inconsistencies in how Zone.js
-        // patches it.
+        var /** @type {?} */ queryObservable = _angular_cdk_rxjs.RxChain.from(rxjs_observable_fromEventPattern.fromEventPattern(
         // Listener callback methods are wrapped to be placed back in ngZone. Callbacks must be placed
         // back into the zone because matchMedia is only included in Zone.js by loading the
         // webapis-media-query.js file alongside the zone.js file.  Additionally, some browsers do not
@@ -226,8 +168,11 @@ var BreakpointObserver = (function () {
             mql.addListener(function (e) { return _this.zone.run(function () { return listener(e); }); });
         }, function (listener) {
             mql.removeListener(function (e) { return _this.zone.run(function () { return listener(e); }); });
-        })
-            .pipe(rxjs_operators_takeUntil.takeUntil(this._destroySubject), rxjs_operators_startWith.startWith(mql), rxjs_operators_map.map(function (nextMql) { return ({ matches: nextMql.matches }); }));
+        }))
+            .call(_angular_cdk_rxjs.takeUntil, this._destroySubject)
+            .call(_angular_cdk_rxjs.startWith, mql)
+            .call(_angular_cdk_rxjs.map, function (nextMql) { return ({ matches: nextMql.matches }); })
+            .result();
         // Add the MediaQueryList to the set of queries.
         var /** @type {?} */ output = { observable: queryObservable, mql: mql };
         this._queries.set(query, output);
@@ -236,7 +181,9 @@ var BreakpointObserver = (function () {
     BreakpointObserver.decorators = [
         { type: _angular_core.Injectable },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     BreakpointObserver.ctorParameters = function () { return [
         { type: MediaMatcher, },
         { type: _angular_core.NgZone, },
@@ -244,11 +191,8 @@ var BreakpointObserver = (function () {
     return BreakpointObserver;
 }());
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
+// PascalCase is being used as Breakpoints is used like an enum.
+// tslint:disable-next-line:variable-name
 var Breakpoints = {
     Handset: '(max-width: 599px) and (orientation: portrait), ' +
         '(max-width: 959px) and (orientation: landscape)',
@@ -264,11 +208,6 @@ var Breakpoints = {
     WebLandscape: '(min-width: 1280px) and (orientation: landscape)',
 };
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
 var LayoutModule = (function () {
     function LayoutModule() {
     }
@@ -278,7 +217,9 @@ var LayoutModule = (function () {
                     imports: [_angular_cdk_platform.PlatformModule],
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     LayoutModule.ctorParameters = function () { return []; };
     return LayoutModule;
 }());

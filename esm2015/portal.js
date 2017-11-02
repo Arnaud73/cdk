@@ -1,16 +1,12 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 import { ComponentFactoryResolver, Directive, Input, NgModule, TemplateRef, ViewContainerRef } from '@angular/core';
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 /**
  * Throws an exception when attempting to attach a null portal to a host.
  * \@docs-private
@@ -32,8 +28,8 @@ function throwPortalAlreadyAttachedError() {
  * \@docs-private
  * @return {?}
  */
-function throwPortalOutletAlreadyDisposedError() {
-    throw Error('This PortalOutlet has already been disposed');
+function throwPortalHostAlreadyDisposedError() {
+    throw Error('This PortalHost has already been disposed');
 }
 /**
  * Throws an exception when attempting to attach an unknown portal type.
@@ -41,7 +37,7 @@ function throwPortalOutletAlreadyDisposedError() {
  * @return {?}
  */
 function throwUnknownPortalTypeError() {
-    throw Error('Attempting to attach an unknown Portal type. BasePortalOutlet accepts either ' +
+    throw Error('Attempting to attach an unknown Portal type. BasePortalHost accepts either ' +
         'a ComponentPortal or a TemplatePortal.');
 }
 /**
@@ -49,8 +45,8 @@ function throwUnknownPortalTypeError() {
  * \@docs-private
  * @return {?}
  */
-function throwNullPortalOutletError() {
-    throw Error('Attempting to attach a portal to a null PortalOutlet');
+function throwNullPortalHostError() {
+    throw Error('Attempting to attach a portal to a null PortalHost');
 }
 /**
  * Throws an exception when attempting to detach a portal that is not attached.
@@ -62,16 +58,8 @@ function throwNoPortalAttachedError() {
 }
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * @record
- */
-
-/**
  * A `Portal` is something that you want to render somewhere else.
- * It can be attach to / detached from a `PortalOutlet`.
+ * It can be attach to / detached from a `PortalHost`.
  * @abstract
  */
 class Portal {
@@ -82,13 +70,13 @@ class Portal {
      */
     attach(host) {
         if (host == null) {
-            throwNullPortalOutletError();
+            throwNullPortalHostError();
         }
         if (host.hasAttached()) {
             throwPortalAlreadyAttachedError();
         }
         this._attachedHost = host;
-        return /** @type {?} */ (host.attach(this));
+        return (host.attach(this));
     }
     /**
      * Detach this portal from its host
@@ -112,8 +100,8 @@ class Portal {
         return this._attachedHost != null;
     }
     /**
-     * Sets the PortalOutlet reference without performing `attach()`. This is used directly by
-     * the PortalOutlet when it is performing an `attach()` or `detach()`.
+     * Sets the PortalHost reference without performing `attach()`. This is used directly by
+     * the PortalHost when it is performing an `attach()` or `detach()`.
      * @param {?} host
      * @return {?}
      */
@@ -161,7 +149,7 @@ class TemplatePortal extends Portal {
         return this.templateRef.elementRef;
     }
     /**
-     * Attach the the portal to the provided `PortalOutlet`.
+     * Attach the the portal to the provided `PortalHost`.
      * When a context is provided it will override the `context` property of the `TemplatePortal`
      * instance.
      * @param {?} host
@@ -181,16 +169,11 @@ class TemplatePortal extends Portal {
     }
 }
 /**
- * A `PortalOutlet` is an space that can contain a single `Portal`.
- * @record
- */
-
-/**
- * Partial implementation of PortalOutlet that handles attaching
- * ComponentPortal and TemplatePortal.
+ * Partial implementation of PortalHost that only deals with attaching either a
+ * ComponentPortal or a TemplatePortal.
  * @abstract
  */
-class BasePortalOutlet {
+class BasePortalHost {
     constructor() {
         /**
          * Whether this host has already been permanently disposed.
@@ -205,7 +188,6 @@ class BasePortalOutlet {
         return !!this._attachedPortal;
     }
     /**
-     * Attaches a portal.
      * @param {?} portal
      * @return {?}
      */
@@ -217,7 +199,7 @@ class BasePortalOutlet {
             throwPortalAlreadyAttachedError();
         }
         if (this._isDisposed) {
-            throwPortalOutletAlreadyDisposedError();
+            throwPortalHostAlreadyDisposedError();
         }
         if (portal instanceof ComponentPortal) {
             this._attachedPortal = portal;
@@ -230,7 +212,20 @@ class BasePortalOutlet {
         throwUnknownPortalTypeError();
     }
     /**
-     * Detaches a previously attached portal.
+     * @abstract
+     * @template T
+     * @param {?} portal
+     * @return {?}
+     */
+    attachComponentPortal(portal) { }
+    /**
+     * @abstract
+     * @template C
+     * @param {?} portal
+     * @return {?}
+     */
+    attachTemplatePortal(portal) { }
+    /**
      * @return {?}
      */
     detach() {
@@ -241,7 +236,6 @@ class BasePortalOutlet {
         this._invokeDisposeFn();
     }
     /**
-     * Permanently dispose of this portal host.
      * @return {?}
      */
     dispose() {
@@ -252,7 +246,6 @@ class BasePortalOutlet {
         this._isDisposed = true;
     }
     /**
-     * \@docs-private
      * @param {?} fn
      * @return {?}
      */
@@ -271,14 +264,12 @@ class BasePortalOutlet {
 }
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * A PortalOutlet for attaching portals to an arbitrary DOM element outside of the Angular
+ * A PortalHost for attaching portals to an arbitrary DOM element outside of the Angular
  * application context.
+ *
+ * This is the only part of the portal core that directly touches the DOM.
  */
-class DomPortalOutlet extends BasePortalOutlet {
+class DomPortalHost extends BasePortalHost {
     /**
      * @param {?} _hostDomElement
      * @param {?} _componentFactoryResolver
@@ -296,7 +287,7 @@ class DomPortalOutlet extends BasePortalOutlet {
      * Attach the given ComponentPortal to DOM element using the ComponentFactoryResolver.
      * @template T
      * @param {?} portal Portal to be attached
-     * @return {?} Reference to the created component.
+     * @return {?}
      */
     attachComponentPortal(portal) {
         let /** @type {?} */ componentFactory = this._componentFactoryResolver.resolveComponentFactory(portal.component);
@@ -326,16 +317,15 @@ class DomPortalOutlet extends BasePortalOutlet {
      * Attaches a template portal to the DOM as an embedded view.
      * @template C
      * @param {?} portal Portal to be attached.
-     * @return {?} Reference to the created embedded view.
+     * @return {?}
      */
     attachTemplatePortal(portal) {
         let /** @type {?} */ viewContainer = portal.viewContainerRef;
         let /** @type {?} */ viewRef = viewContainer.createEmbeddedView(portal.templateRef, portal.context);
         viewRef.detectChanges();
         // The method `createEmbeddedView` will add the view as a child of the viewContainer.
-        // But for the DomPortalOutlet the view can be added everywhere in the DOM
-        // (e.g Overlay Container) To move the view to the specified host element. We just
-        // re-append the existing root nodes.
+        // But for the DomPortalHost the view can be added everywhere in the DOM (e.g Overlay Container)
+        // To move the view to the specified host element. We just re-append the existing root nodes.
         viewRef.rootNodes.forEach(rootNode => this._hostDomElement.appendChild(rootNode));
         this.setDisposeFn((() => {
             let /** @type {?} */ index = viewContainer.indexOf(viewRef);
@@ -362,20 +352,20 @@ class DomPortalOutlet extends BasePortalOutlet {
      * @return {?}
      */
     _getComponentRootNode(componentRef) {
-        return /** @type {?} */ ((/** @type {?} */ (componentRef.hostView)).rootNodes[0]);
+        return (((componentRef.hostView)).rootNodes[0]);
     }
 }
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
  * Directive version of a `TemplatePortal`. Because the directive *is* a TemplatePortal,
  * the directive instance itself can be attached to a host, enabling declarative use of portals.
+ *
+ * Usage:
+ * <ng-template portal #greeting>
+ *   <p> Hello {{name}} </p>
+ * </ng-template>
  */
-class CdkPortal extends TemplatePortal {
+class TemplatePortalDirective extends TemplatePortal {
     /**
      * @param {?} templateRef
      * @param {?} viewContainerRef
@@ -384,25 +374,27 @@ class CdkPortal extends TemplatePortal {
         super(templateRef, viewContainerRef);
     }
 }
-CdkPortal.decorators = [
+TemplatePortalDirective.decorators = [
     { type: Directive, args: [{
                 selector: '[cdk-portal], [cdkPortal], [portal]',
                 exportAs: 'cdkPortal',
             },] },
 ];
-/** @nocollapse */
-CdkPortal.ctorParameters = () => [
+/**
+ * @nocollapse
+ */
+TemplatePortalDirective.ctorParameters = () => [
     { type: TemplateRef, },
     { type: ViewContainerRef, },
 ];
 /**
- * Directive version of a PortalOutlet. Because the directive *is* a PortalOutlet, portals can be
+ * Directive version of a PortalHost. Because the directive *is* a PortalHost, portals can be
  * directly attached to it, enabling declarative use.
  *
  * Usage:
- * <ng-template [cdkPortalOutlet]="greeting"></ng-template>
+ * <ng-template [cdkPortalHost]="greeting"></ng-template>
  */
-class CdkPortalOutlet extends BasePortalOutlet {
+class PortalHostDirective extends BasePortalHost {
     /**
      * @param {?} _componentFactoryResolver
      * @param {?} _viewContainerRef
@@ -427,17 +419,7 @@ class CdkPortalOutlet extends BasePortalOutlet {
      */
     set _deprecatedPortal(v) { this.portal = v; }
     /**
-     * @deprecated
-     * @return {?}
-     */
-    get _deprecatedPortalHost() { return this.portal; }
-    /**
-     * @param {?} v
-     * @return {?}
-     */
-    set _deprecatedPortalHost(v) { this.portal = v; }
-    /**
-     * Portal associated with the Portal outlet.
+     * Portal associated with the Portal host.
      * @return {?}
      */
     get portal() {
@@ -464,16 +446,16 @@ class CdkPortalOutlet extends BasePortalOutlet {
         this._portal = null;
     }
     /**
-     * Attach the given ComponentPortal to this PortalOutlet using the ComponentFactoryResolver.
+     * Attach the given ComponentPortal to this PortalHost using the ComponentFactoryResolver.
      *
      * @template T
-     * @param {?} portal Portal to be attached to the portal outlet.
-     * @return {?} Reference to the created component.
+     * @param {?} portal Portal to be attached to the portal host.
+     * @return {?}
      */
     attachComponentPortal(portal) {
         portal.setAttachedHost(this);
         // If the portal specifies an origin, use that as the logical location of the component
-        // in the application tree. Otherwise use the location of this PortalOutlet.
+        // in the application tree. Otherwise use the location of this PortalHost.
         let /** @type {?} */ viewContainerRef = portal.viewContainerRef != null ?
             portal.viewContainerRef :
             this._viewContainerRef;
@@ -487,7 +469,7 @@ class CdkPortalOutlet extends BasePortalOutlet {
      * Attach the given TemplatePortal to this PortlHost as an embedded View.
      * @template C
      * @param {?} portal Portal to be attached.
-     * @return {?} Reference to the created embedded view.
+     * @return {?}
      */
     attachTemplatePortal(portal) {
         portal.setAttachedHost(this);
@@ -497,37 +479,36 @@ class CdkPortalOutlet extends BasePortalOutlet {
         return viewRef;
     }
 }
-CdkPortalOutlet.decorators = [
+PortalHostDirective.decorators = [
     { type: Directive, args: [{
-                selector: '[cdkPortalOutlet], [cdkPortalHost], [portalHost]',
-                exportAs: 'cdkPortalOutlet, cdkPortalHost',
-                inputs: ['portal: cdkPortalOutlet']
+                selector: '[cdkPortalHost], [portalHost]',
+                exportAs: 'cdkPortalHost',
+                inputs: ['portal: cdkPortalHost']
             },] },
 ];
-/** @nocollapse */
-CdkPortalOutlet.ctorParameters = () => [
+/**
+ * @nocollapse
+ */
+PortalHostDirective.ctorParameters = () => [
     { type: ComponentFactoryResolver, },
     { type: ViewContainerRef, },
 ];
-CdkPortalOutlet.propDecorators = {
-    "_deprecatedPortal": [{ type: Input, args: ['portalHost',] },],
-    "_deprecatedPortalHost": [{ type: Input, args: ['cdkPortalHost',] },],
+PortalHostDirective.propDecorators = {
+    '_deprecatedPortal': [{ type: Input, args: ['portalHost',] },],
 };
 class PortalModule {
 }
 PortalModule.decorators = [
     { type: NgModule, args: [{
-                exports: [CdkPortal, CdkPortalOutlet],
-                declarations: [CdkPortal, CdkPortalOutlet],
+                exports: [TemplatePortalDirective, PortalHostDirective],
+                declarations: [TemplatePortalDirective, PortalHostDirective],
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 PortalModule.ctorParameters = () => [];
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 /**
  * Custom injector to be used when providing custom
  * injection tokens to components inside a portal.
@@ -557,17 +538,8 @@ class PortalInjector {
 }
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
  * Generated bundle index. Do not edit.
  */
 
-export { DomPortalOutlet as DomPortalHost, CdkPortalOutlet as PortalHostDirective, CdkPortal as TemplatePortalDirective, BasePortalOutlet as BasePortalHost, Portal, ComponentPortal, TemplatePortal, BasePortalOutlet, DomPortalOutlet, CdkPortal, CdkPortalOutlet, PortalModule, PortalInjector };
+export { Portal, ComponentPortal, TemplatePortal, BasePortalHost, DomPortalHost, TemplatePortalDirective, PortalHostDirective, PortalModule, PortalInjector };
 //# sourceMappingURL=portal.js.map

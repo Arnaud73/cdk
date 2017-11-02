@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -16,11 +16,8 @@ export declare class BlockScrollStrategy implements ScrollStrategy {
     private _previousScrollPosition;
     private _isEnabled;
     constructor(_viewportRuler: ViewportRuler);
-    /** Attaches this scroll strategy to an overlay. */
     attach(): void;
-    /** Blocks page-level scroll while the attached overlay is open. */
     enable(): void;
-    /** Unblocks page-level scroll while the attached overlay is open. */
     disable(): void;
     private _canBeEnabled();
 }

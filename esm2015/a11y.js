@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,25 +8,12 @@
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { A, DOWN_ARROW, NINE, TAB, UP_ARROW, Z, ZERO } from '@angular/cdk/keycodes';
-import { debounceTime } from 'rxjs/operators/debounceTime';
-import { filter } from 'rxjs/operators/filter';
-import { map } from 'rxjs/operators/map';
-import { tap } from 'rxjs/operators/tap';
+import { RxChain, debounceTime, doOperator, filter, first, map } from '@angular/cdk/rxjs';
 import { Directive, ElementRef, EventEmitter, Inject, Injectable, InjectionToken, Input, NgModule, NgZone, Optional, Output, Renderer2, SkipSelf } from '@angular/core';
-import { Platform, PlatformModule, supportsPassiveEventListeners } from '@angular/cdk/platform';
+import { Platform, PlatformModule } from '@angular/cdk/platform';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { first } from 'rxjs/operators/first';
 import { of } from 'rxjs/observable/of';
 import { CommonModule } from '@angular/common';
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * This interface is for items that can be passed to a ListKeyManager.
- * @record
- */
 
 /**
  * This class manages keyboard events for selectable lists. If you pass it a query list
@@ -48,10 +35,6 @@ class ListKeyManager {
          * when focus is shifted off of the list.
          */
         this.tabOut = new Subject();
-        /**
-         * Stream that emits whenever the active item of the list manager changes.
-         */
-        this.change = new Subject();
     }
     /**
      * Turns on wrapping mode, which ensures that the active item will wrap to
@@ -75,14 +58,19 @@ class ListKeyManager {
         // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
         // and convert those letters back into a string. Afterwards find the first item that starts
         // with that string and select it.
-        this._typeaheadSubscription = this._letterKeyStream.pipe(tap(keyCode => this._pressedLetters.push(keyCode)), debounceTime(debounceInterval), filter(() => this._pressedLetters.length > 0), map(() => this._pressedLetters.join(''))).subscribe(inputString => {
+        this._typeaheadSubscription = RxChain.from(this._letterKeyStream)
+            .call(doOperator, keyCode => this._pressedLetters.push(keyCode))
+            .call(debounceTime, debounceInterval)
+            .call(filter, () => this._pressedLetters.length > 0)
+            .call(map, () => this._pressedLetters.join(''))
+            .subscribe(inputString => {
             const /** @type {?} */ items = this._items.toArray();
             // Start at 1 because we want to start searching at the item immediately
             // following the current active item.
             for (let /** @type {?} */ i = 1; i < items.length + 1; i++) {
                 const /** @type {?} */ index = (this._activeItemIndex + i) % items.length;
                 const /** @type {?} */ item = items[index];
-                if (!item.disabled && /** @type {?} */ ((item.getLabel))().toUpperCase().trim().indexOf(inputString) === 0) {
+                if (!item.disabled && ((item.getLabel))().toUpperCase().trim().indexOf(inputString) === 0) {
                     this.setActiveItem(index);
                     break;
                 }
@@ -97,12 +85,8 @@ class ListKeyManager {
      * @return {?}
      */
     setActiveItem(index) {
-        const /** @type {?} */ previousIndex = this._activeItemIndex;
         this._activeItemIndex = index;
         this._activeItem = this._items.toArray()[index];
-        if (this._activeItemIndex !== previousIndex) {
-            this.change.next(index);
-        }
     }
     /**
      * Sets the active item depending on the key event passed in.
@@ -254,18 +238,6 @@ class ListKeyManager {
     }
 }
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
- * This is the interface for highlightable items (used by the ActiveDescendantKeyManager).
- * Each item must know how to style itself as active or inactive and whether or not it is
- * currently disabled.
- * @record
- */
-
 class ActiveDescendantKeyManager extends ListKeyManager {
     /**
      * This method sets the active item to the item at the specified index.
@@ -285,10 +257,6 @@ class ActiveDescendantKeyManager extends ListKeyManager {
     }
 }
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 /**
  * IDs are deliminated by an empty space, as per the spec.
  */
@@ -333,17 +301,6 @@ function getAriaReferenceIds(el, attr) {
     // Get string array of all individual ids (whitespace deliminated) in the attribute value
     return (el.getAttribute(attr) || '').match(/\S+/g) || [];
 }
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
- * Interface used to register message elements and keep a count of how many registrations have
- * the same message and the reference to the message element used for the aria-describedby.
- * @record
- */
 
 /**
  * ID used for the body container where all messages are appended.
@@ -444,7 +401,9 @@ class AriaDescriber {
 AriaDescriber.decorators = [
     { type: Injectable },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 AriaDescriber.ctorParameters = () => [
     { type: Platform, },
 ];
@@ -515,7 +474,7 @@ function removeCdkDescribedByReferenceIds(element) {
  * @return {?}
  */
 function addMessageReference(element, message) {
-    const /** @type {?} */ registeredMessage = /** @type {?} */ ((messageRegistry.get(message)));
+    const /** @type {?} */ registeredMessage = ((messageRegistry.get(message)));
     // Add the aria-describedby reference and set the describedby_host attribute to mark the element.
     addAriaReferencedId(element, 'aria-describedby', registeredMessage.messageElement.id);
     element.setAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE, '');
@@ -529,7 +488,7 @@ function addMessageReference(element, message) {
  * @return {?}
  */
 function removeMessageReference(element, message) {
-    const /** @type {?} */ registeredMessage = /** @type {?} */ ((messageRegistry.get(message)));
+    const /** @type {?} */ registeredMessage = ((messageRegistry.get(message)));
     registeredMessage.referenceCount--;
     removeAriaReferencedId(element, 'aria-describedby', registeredMessage.messageElement.id);
     element.removeAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE);
@@ -569,10 +528,6 @@ const ARIA_DESCRIBER_PROVIDER = {
 };
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
  * Screenreaders will often fire fake mousedown events when a focusable element
  * is activated using the keyboard. We can typically distinguish between these faked
  * mousedown events and real mousedown events using the "buttons" property. While
@@ -584,18 +539,6 @@ const ARIA_DESCRIBER_PROVIDER = {
 function isFakeMousedownFromScreenReader(event) {
     return event.buttons === 0;
 }
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
- * This is the interface for focusable items (used by the FocusKeyManager).
- * Each item must know how to focus itself, whether or not it is currently disabled
- * and be able to supply it's label.
- * @record
- */
 
 class FocusKeyManager extends ListKeyManager {
     /**
@@ -611,11 +554,6 @@ class FocusKeyManager extends ListKeyManager {
         }
     }
 }
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 
 /**
  * Utility for checking the interactivity of an element, such as whether is is focusable or
@@ -663,7 +601,7 @@ class InteractivityChecker {
         if (!this._platform.isBrowser) {
             return false;
         }
-        let /** @type {?} */ frameElement = /** @type {?} */ (getWindow(element).frameElement);
+        let /** @type {?} */ frameElement = (getWindow(element).frameElement);
         if (frameElement) {
             let /** @type {?} */ frameType = frameElement && frameElement.nodeName.toLowerCase();
             // Frame elements inherit their tabindex onto all child elements.
@@ -734,7 +672,9 @@ class InteractivityChecker {
 InteractivityChecker.decorators = [
     { type: Injectable },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 InteractivityChecker.ctorParameters = () => [
     { type: Platform, },
 ];
@@ -746,8 +686,7 @@ InteractivityChecker.ctorParameters = () => [
 function hasGeometry(element) {
     // Use logic from jQuery to check for an invisible element.
     // See https://github.com/jquery/jquery/blob/master/src/css/hiddenVisibleSelectors.js#L12
-    return !!(element.offsetWidth || element.offsetHeight ||
-        (typeof element.getClientRects === 'function' && element.getClientRects().length));
+    return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 }
 /**
  * Gets whether an element's
@@ -830,7 +769,7 @@ function getTabIndexValue(element) {
  */
 function isPotentiallyTabbableIOS(element) {
     let /** @type {?} */ nodeName = element.nodeName.toLowerCase();
-    let /** @type {?} */ inputType = nodeName === 'input' && (/** @type {?} */ (element)).type;
+    let /** @type {?} */ inputType = nodeName === 'input' && ((element)).type;
     return inputType === 'text'
         || inputType === 'password'
         || nodeName === 'select'
@@ -862,16 +801,12 @@ function getWindow(node) {
 }
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
  * Class that allows for trapping focus within a DOM element.
  *
- * This class currently uses a relatively simple approach to focus trapping.
+ * NOTE: This class currently uses a very simple (naive) approach to focus trapping.
  * It assumes that the tab order is the same as DOM order, which is not necessarily true.
  * Things like tabIndex > 0, flex `order`, and shadow roots can cause to two to misalign.
+ * This will be replaced with a more intelligent solution before the library is considered stable.
  */
 class FocusTrap {
     /**
@@ -936,7 +871,7 @@ class FocusTrap {
             this._endAnchor = this._createAnchor();
         }
         this._ngZone.runOutsideAngular(() => {
-            /** @type {?} */ ((this._startAnchor)).addEventListener('focus', () => {
+            ((this._startAnchor)).addEventListener('focus', () => {
                 this.focusLastTabbableElement();
             }); /** @type {?} */
             ((this._endAnchor)).addEventListener('focus', () => {
@@ -987,21 +922,13 @@ class FocusTrap {
      * @return {?} The boundary element.
      */
     _getRegionBoundary(bound) {
-        if (!this._platform.isBrowser) {
-            return null;
-        }
         // Contains the deprecated version of selector, for temporary backwards comparability.
-        let /** @type {?} */ markers = /** @type {?} */ (this._element.querySelectorAll(`[cdk-focus-region-${bound}], ` +
-            `[cdkFocusRegion${bound}], ` +
+        let /** @type {?} */ markers = (this._element.querySelectorAll(`[cdk-focus-region-${bound}], ` +
             `[cdk-focus-${bound}]`));
         for (let /** @type {?} */ i = 0; i < markers.length; i++) {
             if (markers[i].hasAttribute(`cdk-focus-${bound}`)) {
                 console.warn(`Found use of deprecated attribute 'cdk-focus-${bound}',` +
-                    ` use 'cdkFocusRegion${bound}' instead.`, markers[i]);
-            }
-            else if (markers[i].hasAttribute(`cdk-focus-region-${bound}`)) {
-                console.warn(`Found use of deprecated attribute 'cdk-focus-region-${bound}',` +
-                    ` use 'cdkFocusRegion${bound}' instead.`, markers[i]);
+                    ` use 'cdk-focus-region-${bound}' instead.`, markers[i]);
             }
         }
         if (bound == 'start') {
@@ -1012,19 +939,10 @@ class FocusTrap {
     }
     /**
      * Focuses the element that should be focused when the focus trap is initialized.
-     * @return {?} Whether focus was moved successfuly.
+     * @return {?} Returns whether focus was moved successfuly.
      */
     focusInitialElement() {
-        if (!this._platform.isBrowser) {
-            return false;
-        }
-        // Contains the deprecated version of selector, for temporary backwards comparability.
-        const /** @type {?} */ redirectToElement = /** @type {?} */ (this._element.querySelector(`[cdk-focus-initial], ` +
-            `[cdkFocusInitial]`));
-        if (this._element.hasAttribute(`cdk-focus-initial`)) {
-            console.warn(`Found use of deprecated attribute 'cdk-focus-initial',` +
-                ` use 'cdkFocusInitial' instead.`, this._element);
-        }
+        const /** @type {?} */ redirectToElement = (this._element.querySelector('[cdk-focus-initial]'));
         if (redirectToElement) {
             redirectToElement.focus();
             return true;
@@ -1033,7 +951,7 @@ class FocusTrap {
     }
     /**
      * Focuses the first tabbable element within the focus trap region.
-     * @return {?} Whether focus was moved successfuly.
+     * @return {?} Returns whether focus was moved successfuly.
      */
     focusFirstTabbableElement() {
         const /** @type {?} */ redirectToElement = this._getRegionBoundary('start');
@@ -1044,7 +962,7 @@ class FocusTrap {
     }
     /**
      * Focuses the last tabbable element within the focus trap region.
-     * @return {?} Whether focus was moved successfuly.
+     * @return {?} Returns whether focus was moved successfuly.
      */
     focusLastTabbableElement() {
         const /** @type {?} */ redirectToElement = this._getRegionBoundary('end');
@@ -1117,7 +1035,7 @@ class FocusTrap {
             fn();
         }
         else {
-            this._ngZone.onStable.asObservable().pipe(first()).subscribe(fn);
+            first.call(this._ngZone.onStable.asObservable()).subscribe(fn);
         }
     }
 }
@@ -1136,20 +1054,20 @@ class FocusTrapFactory {
         this._ngZone = _ngZone;
     }
     /**
-     * Creates a focus-trapped region around the given element.
-     * @param {?} element The element around which focus will be trapped.
-     * @param {?=} deferCaptureElements Defers the creation of focus-capturing elements to be done
-     *     manually by the user.
-     * @return {?} The created focus trap instance.
+     * @param {?} element
+     * @param {?=} deferAnchors
+     * @return {?}
      */
-    create(element, deferCaptureElements = false) {
-        return new FocusTrap(element, this._platform, this._checker, this._ngZone, deferCaptureElements);
+    create(element, deferAnchors = false) {
+        return new FocusTrap(element, this._platform, this._checker, this._ngZone, deferAnchors);
     }
 }
 FocusTrapFactory.decorators = [
     { type: Injectable },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 FocusTrapFactory.ctorParameters = () => [
     { type: InteractivityChecker, },
     { type: Platform, },
@@ -1157,7 +1075,6 @@ FocusTrapFactory.ctorParameters = () => [
 ];
 /**
  * Directive for trapping focus within a region.
- * \@docs-private
  * @deprecated
  */
 class FocusTrapDeprecatedDirective {
@@ -1200,13 +1117,15 @@ FocusTrapDeprecatedDirective.decorators = [
                 selector: 'cdk-focus-trap',
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 FocusTrapDeprecatedDirective.ctorParameters = () => [
     { type: ElementRef, },
     { type: FocusTrapFactory, },
 ];
 FocusTrapDeprecatedDirective.propDecorators = {
-    "disabled": [{ type: Input },],
+    'disabled': [{ type: Input },],
 };
 /**
  * Directive for trapping focus within a region.
@@ -1250,19 +1169,16 @@ FocusTrapDirective.decorators = [
                 exportAs: 'cdkTrapFocus',
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 FocusTrapDirective.ctorParameters = () => [
     { type: ElementRef, },
     { type: FocusTrapFactory, },
 ];
 FocusTrapDirective.propDecorators = {
-    "enabled": [{ type: Input, args: ['cdkTrapFocus',] },],
+    'enabled': [{ type: Input, args: ['cdkTrapFocus',] },],
 };
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 
 const LIVE_ANNOUNCER_ELEMENT_TOKEN = new InjectionToken('liveAnnouncerElement');
 class LiveAnnouncer {
@@ -1319,7 +1235,9 @@ class LiveAnnouncer {
 LiveAnnouncer.decorators = [
     { type: Injectable },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 LiveAnnouncer.ctorParameters = () => [
     { type: undefined, decorators: [{ type: Optional }, { type: Inject, args: [LIVE_ANNOUNCER_ELEMENT_TOKEN,] },] },
     { type: Platform, },
@@ -1347,11 +1265,6 @@ const LIVE_ANNOUNCER_PROVIDER = {
     ],
     useFactory: LIVE_ANNOUNCER_PROVIDER_FACTORY
 };
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
 // that a value of around 650ms seems appropriate.
@@ -1398,7 +1311,7 @@ class FocusMonitor {
         if (this._elementInfo.has(element)) {
             let /** @type {?} */ cachedInfo = this._elementInfo.get(element); /** @type {?} */
             ((cachedInfo)).checkChildren = checkChildren;
-            return /** @type {?} */ ((cachedInfo)).subject.asObservable();
+            return ((cachedInfo)).subject.asObservable();
         }
         // Create monitored element info.
         let /** @type {?} */ info = {
@@ -1478,9 +1391,7 @@ class FocusMonitor {
             }
             this._lastTouchTarget = event.target;
             this._touchTimeout = setTimeout(() => this._lastTouchTarget = null, TOUCH_BUFFER_MS);
-            // Note that we need to cast the event options to `any`, because at the time of writing
-            // (TypeScript 2.5), the built-in types don't support the `addEventListener` options param.
-        }, supportsPassiveEventListeners() ? (/** @type {?} */ ({ passive: true, capture: true })) : true);
+        }, true);
         // Make a note of when the window regains focus, so we can restore the origin info for the
         // focused element.
         window.addEventListener('focus', () => {
@@ -1604,7 +1515,9 @@ class FocusMonitor {
 FocusMonitor.decorators = [
     { type: Injectable },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 FocusMonitor.ctorParameters = () => [
     { type: NgZone, },
     { type: Platform, },
@@ -1644,14 +1557,16 @@ CdkMonitorFocus.decorators = [
                 selector: '[cdkMonitorElementFocus], [cdkMonitorSubtreeFocus]',
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 CdkMonitorFocus.ctorParameters = () => [
     { type: ElementRef, },
     { type: FocusMonitor, },
     { type: Renderer2, },
 ];
 CdkMonitorFocus.propDecorators = {
-    "cdkFocusChange": [{ type: Output },],
+    'cdkFocusChange': [{ type: Output },],
 };
 /**
  * \@docs-private
@@ -1673,11 +1588,6 @@ const FOCUS_MONITOR_PROVIDER = {
     useFactory: FOCUS_MONITOR_PROVIDER_FACTORY
 };
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
 class A11yModule {
 }
 A11yModule.decorators = [
@@ -1695,18 +1605,11 @@ A11yModule.decorators = [
                 ]
             },] },
 ];
-/** @nocollapse */
+/**
+ * @nocollapse
+ */
 A11yModule.ctorParameters = () => [];
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 /**
  * Generated bundle index. Do not edit.
  */

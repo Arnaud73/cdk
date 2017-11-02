@@ -1,15 +1,15 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rxjs/Subject'), require('rxjs/Subscription'), require('@angular/cdk/keycodes'), require('rxjs/operators/debounceTime'), require('rxjs/operators/filter'), require('rxjs/operators/map'), require('rxjs/operators/tap'), require('@angular/core'), require('@angular/cdk/platform'), require('@angular/cdk/coercion'), require('rxjs/operators/first'), require('rxjs/observable/of'), require('@angular/common')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'rxjs/Subject', 'rxjs/Subscription', '@angular/cdk/keycodes', 'rxjs/operators/debounceTime', 'rxjs/operators/filter', 'rxjs/operators/map', 'rxjs/operators/tap', '@angular/core', '@angular/cdk/platform', '@angular/cdk/coercion', 'rxjs/operators/first', 'rxjs/observable/of', '@angular/common'], factory) :
-	(factory((global.ng = global.ng || {}, global.ng.cdk = global.ng.cdk || {}, global.ng.cdk.a11y = global.ng.cdk.a11y || {}),global.Rx,global.Rx,global.ng.cdk.keycodes,global.Rx.Observable,global.Rx.Observable,global.Rx.Observable,global.Rx.Observable,global.ng.core,global.ng.cdk.platform,global.ng.cdk.coercion,global.Rx.Observable,global.Rx.Observable,global.ng.common));
-}(this, (function (exports,rxjs_Subject,rxjs_Subscription,_angular_cdk_keycodes,rxjs_operators_debounceTime,rxjs_operators_filter,rxjs_operators_map,rxjs_operators_tap,_angular_core,_angular_cdk_platform,_angular_cdk_coercion,rxjs_operators_first,rxjs_observable_of,_angular_common) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rxjs/Subject'), require('rxjs/Subscription'), require('@angular/cdk/keycodes'), require('@angular/cdk/rxjs'), require('@angular/core'), require('@angular/cdk/platform'), require('@angular/cdk/coercion'), require('rxjs/observable/of'), require('@angular/common')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'rxjs/Subject', 'rxjs/Subscription', '@angular/cdk/keycodes', '@angular/cdk/rxjs', '@angular/core', '@angular/cdk/platform', '@angular/cdk/coercion', 'rxjs/observable/of', '@angular/common'], factory) :
+	(factory((global.ng = global.ng || {}, global.ng.cdk = global.ng.cdk || {}, global.ng.cdk.a11y = global.ng.cdk.a11y || {}),global.Rx,global.Rx,global.ng.cdk.keycodes,global.ng.cdk.rxjs,global.ng.core,global.ng.cdk.platform,global.ng.cdk.coercion,global.Rx.Observable,global.ng.common));
+}(this, (function (exports,rxjs_Subject,rxjs_Subscription,_angular_cdk_keycodes,_angular_cdk_rxjs,_angular_core,_angular_cdk_platform,_angular_cdk_coercion,rxjs_observable_of,_angular_common) { 'use strict';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -38,19 +38,13 @@ function __extends(d, b) {
 }
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * This interface is for items that can be passed to a ListKeyManager.
- * @record
- */
-
-/**
  * This class manages keyboard events for selectable lists. If you pass it a query list
  * of items, it will set the active item correctly when arrow events occur.
  */
 var ListKeyManager = (function () {
+    /**
+     * @param {?} _items
+     */
     function ListKeyManager(_items) {
         this._items = _items;
         this._activeItemIndex = -1;
@@ -63,44 +57,22 @@ var ListKeyManager = (function () {
          * when focus is shifted off of the list.
          */
         this.tabOut = new rxjs_Subject.Subject();
-        /**
-         * Stream that emits whenever the active item of the list manager changes.
-         */
-        this.change = new rxjs_Subject.Subject();
     }
     /**
      * Turns on wrapping mode, which ensures that the active item will wrap to
      * the other end of list when there are no more items in the given direction.
-     */
-    /**
-     * Turns on wrapping mode, which ensures that the active item will wrap to
-     * the other end of list when there are no more items in the given direction.
      * @return {?}
      */
-    ListKeyManager.prototype.withWrap = /**
-     * Turns on wrapping mode, which ensures that the active item will wrap to
-     * the other end of list when there are no more items in the given direction.
-     * @return {?}
-     */
-    function () {
+    ListKeyManager.prototype.withWrap = function () {
         this._wrap = true;
         return this;
     };
     /**
      * Turns on typeahead mode which allows users to set the active item by typing.
-     * @param debounceInterval Time to wait after the last keystroke before setting the active item.
-     */
-    /**
-     * Turns on typeahead mode which allows users to set the active item by typing.
      * @param {?=} debounceInterval Time to wait after the last keystroke before setting the active item.
      * @return {?}
      */
-    ListKeyManager.prototype.withTypeAhead = /**
-     * Turns on typeahead mode which allows users to set the active item by typing.
-     * @param {?=} debounceInterval Time to wait after the last keystroke before setting the active item.
-     * @return {?}
-     */
-    function (debounceInterval) {
+    ListKeyManager.prototype.withTypeAhead = function (debounceInterval) {
         var _this = this;
         if (debounceInterval === void 0) { debounceInterval = 200; }
         if (this._items.length && this._items.some(function (item) { return typeof item.getLabel !== 'function'; })) {
@@ -110,14 +82,19 @@ var ListKeyManager = (function () {
         // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
         // and convert those letters back into a string. Afterwards find the first item that starts
         // with that string and select it.
-        this._typeaheadSubscription = this._letterKeyStream.pipe(rxjs_operators_tap.tap(function (keyCode) { return _this._pressedLetters.push(keyCode); }), rxjs_operators_debounceTime.debounceTime(debounceInterval), rxjs_operators_filter.filter(function () { return _this._pressedLetters.length > 0; }), rxjs_operators_map.map(function () { return _this._pressedLetters.join(''); })).subscribe(function (inputString) {
+        this._typeaheadSubscription = _angular_cdk_rxjs.RxChain.from(this._letterKeyStream)
+            .call(_angular_cdk_rxjs.doOperator, function (keyCode) { return _this._pressedLetters.push(keyCode); })
+            .call(_angular_cdk_rxjs.debounceTime, debounceInterval)
+            .call(_angular_cdk_rxjs.filter, function () { return _this._pressedLetters.length > 0; })
+            .call(_angular_cdk_rxjs.map, function () { return _this._pressedLetters.join(''); })
+            .subscribe(function (inputString) {
             var /** @type {?} */ items = _this._items.toArray();
             // Start at 1 because we want to start searching at the item immediately
             // following the current active item.
             for (var /** @type {?} */ i = 1; i < items.length + 1; i++) {
                 var /** @type {?} */ index = (_this._activeItemIndex + i) % items.length;
                 var /** @type {?} */ item = items[index];
-                if (!item.disabled && /** @type {?} */ ((item.getLabel))().toUpperCase().trim().indexOf(inputString) === 0) {
+                if (!item.disabled && ((item.getLabel))().toUpperCase().trim().indexOf(inputString) === 0) {
                     _this.setActiveItem(index);
                     break;
                 }
@@ -128,41 +105,19 @@ var ListKeyManager = (function () {
     };
     /**
      * Sets the active item to the item at the index specified.
-     * @param index The index of the item to be set as active.
-     */
-    /**
-     * Sets the active item to the item at the index specified.
      * @param {?} index The index of the item to be set as active.
      * @return {?}
      */
-    ListKeyManager.prototype.setActiveItem = /**
-     * Sets the active item to the item at the index specified.
-     * @param {?} index The index of the item to be set as active.
-     * @return {?}
-     */
-    function (index) {
-        var /** @type {?} */ previousIndex = this._activeItemIndex;
+    ListKeyManager.prototype.setActiveItem = function (index) {
         this._activeItemIndex = index;
         this._activeItem = this._items.toArray()[index];
-        if (this._activeItemIndex !== previousIndex) {
-            this.change.next(index);
-        }
     };
     /**
      * Sets the active item depending on the key event passed in.
-     * @param event Keyboard event to be used for determining which element should be active.
-     */
-    /**
-     * Sets the active item depending on the key event passed in.
      * @param {?} event Keyboard event to be used for determining which element should be active.
      * @return {?}
      */
-    ListKeyManager.prototype.onKeydown = /**
-     * Sets the active item depending on the key event passed in.
-     * @param {?} event Keyboard event to be used for determining which element should be active.
-     * @return {?}
-     */
-    function (event) {
+    ListKeyManager.prototype.onKeydown = function (event) {
         switch (event.keyCode) {
             case _angular_cdk_keycodes.DOWN_ARROW:
                 this.setNextItemActive();
@@ -191,93 +146,62 @@ var ListKeyManager = (function () {
         event.preventDefault();
     };
     Object.defineProperty(ListKeyManager.prototype, "activeItemIndex", {
-        /** Index of the currently active item. */
-        get: /**
+        /**
          * Index of the currently active item.
          * @return {?}
          */
-        function () {
+        get: function () {
             return this._activeItemIndex;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(ListKeyManager.prototype, "activeItem", {
-        /** The active item. */
-        get: /**
+        /**
          * The active item.
          * @return {?}
          */
-        function () {
+        get: function () {
             return this._activeItem;
         },
         enumerable: true,
         configurable: true
     });
-    /** Sets the active item to the first enabled item in the list. */
     /**
      * Sets the active item to the first enabled item in the list.
      * @return {?}
      */
-    ListKeyManager.prototype.setFirstItemActive = /**
-     * Sets the active item to the first enabled item in the list.
-     * @return {?}
-     */
-    function () {
+    ListKeyManager.prototype.setFirstItemActive = function () {
         this._setActiveItemByIndex(0, 1);
     };
-    /** Sets the active item to the last enabled item in the list. */
     /**
      * Sets the active item to the last enabled item in the list.
      * @return {?}
      */
-    ListKeyManager.prototype.setLastItemActive = /**
-     * Sets the active item to the last enabled item in the list.
-     * @return {?}
-     */
-    function () {
+    ListKeyManager.prototype.setLastItemActive = function () {
         this._setActiveItemByIndex(this._items.length - 1, -1);
     };
-    /** Sets the active item to the next enabled item in the list. */
     /**
      * Sets the active item to the next enabled item in the list.
      * @return {?}
      */
-    ListKeyManager.prototype.setNextItemActive = /**
-     * Sets the active item to the next enabled item in the list.
-     * @return {?}
-     */
-    function () {
+    ListKeyManager.prototype.setNextItemActive = function () {
         this._activeItemIndex < 0 ? this.setFirstItemActive() : this._setActiveItemByDelta(1);
     };
-    /** Sets the active item to a previous enabled item in the list. */
     /**
      * Sets the active item to a previous enabled item in the list.
      * @return {?}
      */
-    ListKeyManager.prototype.setPreviousItemActive = /**
-     * Sets the active item to a previous enabled item in the list.
-     * @return {?}
-     */
-    function () {
+    ListKeyManager.prototype.setPreviousItemActive = function () {
         this._activeItemIndex < 0 && this._wrap ? this.setLastItemActive()
             : this._setActiveItemByDelta(-1);
     };
     /**
      * Allows setting of the activeItemIndex without any other effects.
-     * @param index The new activeItemIndex.
-     */
-    /**
-     * Allows setting of the activeItemIndex without any other effects.
      * @param {?} index The new activeItemIndex.
      * @return {?}
      */
-    ListKeyManager.prototype.updateActiveItemIndex = /**
-     * Allows setting of the activeItemIndex without any other effects.
-     * @param {?} index The new activeItemIndex.
-     * @return {?}
-     */
-    function (index) {
+    ListKeyManager.prototype.updateActiveItemIndex = function (index) {
         this._activeItemIndex = index;
     };
     /**
@@ -288,15 +212,7 @@ var ListKeyManager = (function () {
      * @param {?=} items
      * @return {?}
      */
-    ListKeyManager.prototype._setActiveItemByDelta = /**
-     * This method sets the active item, given a list of items and the delta between the
-     * currently active item and the new active item. It will calculate differently
-     * depending on whether wrap mode is turned on.
-     * @param {?} delta
-     * @param {?=} items
-     * @return {?}
-     */
-    function (delta, items) {
+    ListKeyManager.prototype._setActiveItemByDelta = function (delta, items) {
         if (items === void 0) { items = this._items.toArray(); }
         this._wrap ? this._setActiveInWrapMode(delta, items)
             : this._setActiveInDefaultMode(delta, items);
@@ -309,15 +225,7 @@ var ListKeyManager = (function () {
      * @param {?} items
      * @return {?}
      */
-    ListKeyManager.prototype._setActiveInWrapMode = /**
-     * Sets the active item properly given "wrap" mode. In other words, it will continue to move
-     * down the list until it finds an item that is not disabled, and it will wrap if it
-     * encounters either end of the list.
-     * @param {?} delta
-     * @param {?} items
-     * @return {?}
-     */
-    function (delta, items) {
+    ListKeyManager.prototype._setActiveInWrapMode = function (delta, items) {
         // when active item would leave menu, wrap to beginning or end
         this._activeItemIndex =
             (this._activeItemIndex + delta + items.length) % items.length;
@@ -337,15 +245,7 @@ var ListKeyManager = (function () {
      * @param {?} items
      * @return {?}
      */
-    ListKeyManager.prototype._setActiveInDefaultMode = /**
-     * Sets the active item properly given the default mode. In other words, it will
-     * continue to move down the list until it finds an item that is not disabled. If
-     * it encounters either end of the list, it will stop and not wrap.
-     * @param {?} delta
-     * @param {?} items
-     * @return {?}
-     */
-    function (delta, items) {
+    ListKeyManager.prototype._setActiveInDefaultMode = function (delta, items) {
         this._setActiveItemByIndex(this._activeItemIndex + delta, delta, items);
     };
     /**
@@ -357,16 +257,7 @@ var ListKeyManager = (function () {
      * @param {?=} items
      * @return {?}
      */
-    ListKeyManager.prototype._setActiveItemByIndex = /**
-     * Sets the active item to the first enabled item starting at the index specified. If the
-     * item is disabled, it will move in the fallbackDelta direction until it either
-     * finds an enabled item or encounters the end of the list.
-     * @param {?} index
-     * @param {?} fallbackDelta
-     * @param {?=} items
-     * @return {?}
-     */
-    function (index, fallbackDelta, items) {
+    ListKeyManager.prototype._setActiveItemByIndex = function (index, fallbackDelta, items) {
         if (items === void 0) { items = this._items.toArray(); }
         if (!items[index]) {
             return;
@@ -382,17 +273,6 @@ var ListKeyManager = (function () {
     return ListKeyManager;
 }());
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * This is the interface for highlightable items (used by the ActiveDescendantKeyManager).
- * Each item must know how to style itself as active or inactive and whether or not it is
- * currently disabled.
- * @record
- */
-
 var ActiveDescendantKeyManager = (function (_super) {
     __extends(ActiveDescendantKeyManager, _super);
     function ActiveDescendantKeyManager() {
@@ -402,22 +282,10 @@ var ActiveDescendantKeyManager = (function (_super) {
      * This method sets the active item to the item at the specified index.
      * It also adds active styles to the newly active item and removes active
      * styles from the previously active item.
-     */
-    /**
-     * This method sets the active item to the item at the specified index.
-     * It also adds active styles to the newly active item and removes active
-     * styles from the previously active item.
      * @param {?} index
      * @return {?}
      */
-    ActiveDescendantKeyManager.prototype.setActiveItem = /**
-     * This method sets the active item to the item at the specified index.
-     * It also adds active styles to the newly active item and removes active
-     * styles from the previously active item.
-     * @param {?} index
-     * @return {?}
-     */
-    function (index) {
+    ActiveDescendantKeyManager.prototype.setActiveItem = function (index) {
         if (this.activeItem) {
             this.activeItem.setInactiveStyles();
         }
@@ -429,10 +297,6 @@ var ActiveDescendantKeyManager = (function (_super) {
     return ActiveDescendantKeyManager;
 }(ListKeyManager));
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 /**
  * IDs are deliminated by an empty space, as per the spec.
  */
@@ -479,17 +343,6 @@ function getAriaReferenceIds(el, attr) {
 }
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
- * Interface used to register message elements and keep a count of how many registrations have
- * the same message and the reference to the message element used for the aria-describedby.
- * @record
- */
-
-/**
  * ID used for the body container where all messages are appended.
  */
 var MESSAGES_CONTAINER_ID = 'cdk-describedby-message-container';
@@ -520,6 +373,9 @@ var messagesContainer = null;
  * \@docs-private
  */
 var AriaDescriber = (function () {
+    /**
+     * @param {?} _platform
+     */
     function AriaDescriber(_platform) {
         this._platform = _platform;
     }
@@ -527,24 +383,11 @@ var AriaDescriber = (function () {
      * Adds to the host element an aria-describedby reference to a hidden element that contains
      * the message. If the same message has already been registered, then it will reuse the created
      * message element.
-     */
-    /**
-     * Adds to the host element an aria-describedby reference to a hidden element that contains
-     * the message. If the same message has already been registered, then it will reuse the created
-     * message element.
      * @param {?} hostElement
      * @param {?} message
      * @return {?}
      */
-    AriaDescriber.prototype.describe = /**
-     * Adds to the host element an aria-describedby reference to a hidden element that contains
-     * the message. If the same message has already been registered, then it will reuse the created
-     * message element.
-     * @param {?} hostElement
-     * @param {?} message
-     * @return {?}
-     */
-    function (hostElement, message) {
+    AriaDescriber.prototype.describe = function (hostElement, message) {
         if (!this._platform.isBrowser || !message.trim()) {
             return;
         }
@@ -555,20 +398,13 @@ var AriaDescriber = (function () {
             addMessageReference(hostElement, message);
         }
     };
-    /** Removes the host element's aria-describedby reference to the message element. */
     /**
      * Removes the host element's aria-describedby reference to the message element.
      * @param {?} hostElement
      * @param {?} message
      * @return {?}
      */
-    AriaDescriber.prototype.removeDescription = /**
-     * Removes the host element's aria-describedby reference to the message element.
-     * @param {?} hostElement
-     * @param {?} message
-     * @return {?}
-     */
-    function (hostElement, message) {
+    AriaDescriber.prototype.removeDescription = function (hostElement, message) {
         if (!this._platform.isBrowser || !message.trim()) {
             return;
         }
@@ -583,16 +419,11 @@ var AriaDescriber = (function () {
             deleteMessagesContainer();
         }
     };
-    /** Unregisters all created message elements and removes the message container. */
     /**
      * Unregisters all created message elements and removes the message container.
      * @return {?}
      */
-    AriaDescriber.prototype.ngOnDestroy = /**
-     * Unregisters all created message elements and removes the message container.
-     * @return {?}
-     */
-    function () {
+    AriaDescriber.prototype.ngOnDestroy = function () {
         if (!this._platform.isBrowser) {
             return;
         }
@@ -609,7 +440,9 @@ var AriaDescriber = (function () {
     AriaDescriber.decorators = [
         { type: _angular_core.Injectable },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     AriaDescriber.ctorParameters = function () { return [
         { type: _angular_cdk_platform.Platform, },
     ]; };
@@ -682,7 +515,7 @@ function removeCdkDescribedByReferenceIds(element) {
  * @return {?}
  */
 function addMessageReference(element, message) {
-    var /** @type {?} */ registeredMessage = /** @type {?} */ ((messageRegistry.get(message)));
+    var /** @type {?} */ registeredMessage = ((messageRegistry.get(message)));
     // Add the aria-describedby reference and set the describedby_host attribute to mark the element.
     addAriaReferencedId(element, 'aria-describedby', registeredMessage.messageElement.id);
     element.setAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE, '');
@@ -696,7 +529,7 @@ function addMessageReference(element, message) {
  * @return {?}
  */
 function removeMessageReference(element, message) {
-    var /** @type {?} */ registeredMessage = /** @type {?} */ ((messageRegistry.get(message)));
+    var /** @type {?} */ registeredMessage = ((messageRegistry.get(message)));
     registeredMessage.referenceCount--;
     removeAriaReferencedId(element, 'aria-describedby', registeredMessage.messageElement.id);
     element.removeAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE);
@@ -736,10 +569,6 @@ var ARIA_DESCRIBER_PROVIDER = {
 };
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
  * Screenreaders will often fire fake mousedown events when a focusable element
  * is activated using the keyboard. We can typically distinguish between these faked
  * mousedown events and real mousedown events using the "buttons" property. While
@@ -752,17 +581,6 @@ function isFakeMousedownFromScreenReader(event) {
     return event.buttons === 0;
 }
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * This is the interface for focusable items (used by the FocusKeyManager).
- * Each item must know how to focus itself, whether or not it is currently disabled
- * and be able to supply it's label.
- * @record
- */
-
 var FocusKeyManager = (function (_super) {
     __extends(FocusKeyManager, _super);
     function FocusKeyManager() {
@@ -771,20 +589,10 @@ var FocusKeyManager = (function (_super) {
     /**
      * This method sets the active item to the item at the specified index.
      * It also adds focuses the newly active item.
-     */
-    /**
-     * This method sets the active item to the item at the specified index.
-     * It also adds focuses the newly active item.
      * @param {?} index
      * @return {?}
      */
-    FocusKeyManager.prototype.setActiveItem = /**
-     * This method sets the active item to the item at the specified index.
-     * It also adds focuses the newly active item.
-     * @param {?} index
-     * @return {?}
-     */
-    function (index) {
+    FocusKeyManager.prototype.setActiveItem = function (index) {
         _super.prototype.setActiveItem.call(this, index);
         if (this.activeItem) {
             this.activeItem.focus();
@@ -794,37 +602,23 @@ var FocusKeyManager = (function (_super) {
 }(ListKeyManager));
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
  * Utility for checking the interactivity of an element, such as whether is is focusable or
  * tabbable.
  */
 var InteractivityChecker = (function () {
+    /**
+     * @param {?} _platform
+     */
     function InteractivityChecker(_platform) {
         this._platform = _platform;
     }
     /**
      * Gets whether an element is disabled.
      *
-     * @param element Element to be checked.
-     * @returns Whether the element is disabled.
-     */
-    /**
-     * Gets whether an element is disabled.
-     *
      * @param {?} element Element to be checked.
      * @return {?} Whether the element is disabled.
      */
-    InteractivityChecker.prototype.isDisabled = /**
-     * Gets whether an element is disabled.
-     *
-     * @param {?} element Element to be checked.
-     * @return {?} Whether the element is disabled.
-     */
-    function (element) {
+    InteractivityChecker.prototype.isDisabled = function (element) {
         // This does not capture some cases, such as a non-form control with a disabled attribute or
         // a form control inside of a disabled form, but should capture the most common cases.
         return element.hasAttribute('disabled');
@@ -835,56 +629,25 @@ var InteractivityChecker = (function () {
      * This will capture states like `display: none` and `visibility: hidden`, but not things like
      * being clipped by an `overflow: hidden` parent or being outside the viewport.
      *
-     * @returns Whether the element is visible.
-     */
-    /**
-     * Gets whether an element is visible for the purposes of interactivity.
-     *
-     * This will capture states like `display: none` and `visibility: hidden`, but not things like
-     * being clipped by an `overflow: hidden` parent or being outside the viewport.
-     *
      * @param {?} element
      * @return {?} Whether the element is visible.
      */
-    InteractivityChecker.prototype.isVisible = /**
-     * Gets whether an element is visible for the purposes of interactivity.
-     *
-     * This will capture states like `display: none` and `visibility: hidden`, but not things like
-     * being clipped by an `overflow: hidden` parent or being outside the viewport.
-     *
-     * @param {?} element
-     * @return {?} Whether the element is visible.
-     */
-    function (element) {
+    InteractivityChecker.prototype.isVisible = function (element) {
         return hasGeometry(element) && getComputedStyle(element).visibility === 'visible';
     };
     /**
      * Gets whether an element can be reached via Tab key.
      * Assumes that the element has already been checked with isFocusable.
      *
-     * @param element Element to be checked.
-     * @returns Whether the element is tabbable.
-     */
-    /**
-     * Gets whether an element can be reached via Tab key.
-     * Assumes that the element has already been checked with isFocusable.
-     *
      * @param {?} element Element to be checked.
      * @return {?} Whether the element is tabbable.
      */
-    InteractivityChecker.prototype.isTabbable = /**
-     * Gets whether an element can be reached via Tab key.
-     * Assumes that the element has already been checked with isFocusable.
-     *
-     * @param {?} element Element to be checked.
-     * @return {?} Whether the element is tabbable.
-     */
-    function (element) {
+    InteractivityChecker.prototype.isTabbable = function (element) {
         // Nothing is tabbable on the the server 😎
         if (!this._platform.isBrowser) {
             return false;
         }
-        var /** @type {?} */ frameElement = /** @type {?} */ (getWindow(element).frameElement);
+        var /** @type {?} */ frameElement = (getWindow(element).frameElement);
         if (frameElement) {
             var /** @type {?} */ frameType = frameElement && frameElement.nodeName.toLowerCase();
             // Frame elements inherit their tabindex onto all child elements.
@@ -943,22 +706,10 @@ var InteractivityChecker = (function () {
     /**
      * Gets whether an element can be focused by the user.
      *
-     * @param element Element to be checked.
-     * @returns Whether the element is focusable.
-     */
-    /**
-     * Gets whether an element can be focused by the user.
-     *
      * @param {?} element Element to be checked.
      * @return {?} Whether the element is focusable.
      */
-    InteractivityChecker.prototype.isFocusable = /**
-     * Gets whether an element can be focused by the user.
-     *
-     * @param {?} element Element to be checked.
-     * @return {?} Whether the element is focusable.
-     */
-    function (element) {
+    InteractivityChecker.prototype.isFocusable = function (element) {
         // Perform checks in order of left to most expensive.
         // Again, naive approach that does not capture many edge cases and browser quirks.
         return isPotentiallyFocusable(element) && !this.isDisabled(element) && this.isVisible(element);
@@ -966,7 +717,9 @@ var InteractivityChecker = (function () {
     InteractivityChecker.decorators = [
         { type: _angular_core.Injectable },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     InteractivityChecker.ctorParameters = function () { return [
         { type: _angular_cdk_platform.Platform, },
     ]; };
@@ -980,8 +733,7 @@ var InteractivityChecker = (function () {
 function hasGeometry(element) {
     // Use logic from jQuery to check for an invisible element.
     // See https://github.com/jquery/jquery/blob/master/src/css/hiddenVisibleSelectors.js#L12
-    return !!(element.offsetWidth || element.offsetHeight ||
-        (typeof element.getClientRects === 'function' && element.getClientRects().length));
+    return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 }
 /**
  * Gets whether an element's
@@ -1064,7 +816,7 @@ function getTabIndexValue(element) {
  */
 function isPotentiallyTabbableIOS(element) {
     var /** @type {?} */ nodeName = element.nodeName.toLowerCase();
-    var /** @type {?} */ inputType = nodeName === 'input' && (/** @type {?} */ (element)).type;
+    var /** @type {?} */ inputType = nodeName === 'input' && ((element)).type;
     return inputType === 'text'
         || inputType === 'password'
         || nodeName === 'select'
@@ -1096,18 +848,21 @@ function getWindow(node) {
 }
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
  * Class that allows for trapping focus within a DOM element.
  *
- * This class currently uses a relatively simple approach to focus trapping.
+ * NOTE: This class currently uses a very simple (naive) approach to focus trapping.
  * It assumes that the tab order is the same as DOM order, which is not necessarily true.
  * Things like tabIndex > 0, flex `order`, and shadow roots can cause to two to misalign.
+ * This will be replaced with a more intelligent solution before the library is considered stable.
  */
 var FocusTrap = (function () {
+    /**
+     * @param {?} _element
+     * @param {?} _platform
+     * @param {?} _checker
+     * @param {?} _ngZone
+     * @param {?=} deferAnchors
+     */
     function FocusTrap(_element, _platform, _checker, _ngZone, deferAnchors) {
         if (deferAnchors === void 0) { deferAnchors = false; }
         this._element = _element;
@@ -1120,17 +875,16 @@ var FocusTrap = (function () {
         }
     }
     Object.defineProperty(FocusTrap.prototype, "enabled", {
-        /** Whether the focus trap is active. */
-        get: /**
+        /**
          * Whether the focus trap is active.
          * @return {?}
          */
-        function () { return this._enabled; },
-        set: /**
+        get: function () { return this._enabled; },
+        /**
          * @param {?} val
          * @return {?}
          */
-        function (val) {
+        set: function (val) {
             this._enabled = val;
             if (this._startAnchor && this._endAnchor) {
                 this._startAnchor.tabIndex = this._endAnchor.tabIndex = this._enabled ? 0 : -1;
@@ -1139,16 +893,11 @@ var FocusTrap = (function () {
         enumerable: true,
         configurable: true
     });
-    /** Destroys the focus trap by cleaning up the anchors. */
     /**
      * Destroys the focus trap by cleaning up the anchors.
      * @return {?}
      */
-    FocusTrap.prototype.destroy = /**
-     * Destroys the focus trap by cleaning up the anchors.
-     * @return {?}
-     */
-    function () {
+    FocusTrap.prototype.destroy = function () {
         if (this._startAnchor && this._startAnchor.parentNode) {
             this._startAnchor.parentNode.removeChild(this._startAnchor);
         }
@@ -1160,18 +909,9 @@ var FocusTrap = (function () {
     /**
      * Inserts the anchors into the DOM. This is usually done automatically
      * in the constructor, but can be deferred for cases like directives with `*ngIf`.
-     */
-    /**
-     * Inserts the anchors into the DOM. This is usually done automatically
-     * in the constructor, but can be deferred for cases like directives with `*ngIf`.
      * @return {?}
      */
-    FocusTrap.prototype.attachAnchors = /**
-     * Inserts the anchors into the DOM. This is usually done automatically
-     * in the constructor, but can be deferred for cases like directives with `*ngIf`.
-     * @return {?}
-     */
-    function () {
+    FocusTrap.prototype.attachAnchors = function () {
         var _this = this;
         // If we're not on the browser, there can be no focus to trap.
         if (!this._platform.isBrowser) {
@@ -1184,7 +924,7 @@ var FocusTrap = (function () {
             this._endAnchor = this._createAnchor();
         }
         this._ngZone.runOutsideAngular(function () {
-            /** @type {?} */ ((_this._startAnchor)).addEventListener('focus', function () {
+            ((_this._startAnchor)).addEventListener('focus', function () {
                 _this.focusLastTabbableElement();
             }); /** @type {?} */
             ((_this._endAnchor)).addEventListener('focus', function () {
@@ -1199,22 +939,10 @@ var FocusTrap = (function () {
     /**
      * Waits for the zone to stabilize, then either focuses the first element that the
      * user specified, or the first tabbable element.
-     * @returns Returns a promise that resolves with a boolean, depending
-     * on whether focus was moved successfuly.
-     */
-    /**
-     * Waits for the zone to stabilize, then either focuses the first element that the
-     * user specified, or the first tabbable element.
      * @return {?} Returns a promise that resolves with a boolean, depending
      * on whether focus was moved successfuly.
      */
-    FocusTrap.prototype.focusInitialElementWhenReady = /**
-     * Waits for the zone to stabilize, then either focuses the first element that the
-     * user specified, or the first tabbable element.
-     * @return {?} Returns a promise that resolves with a boolean, depending
-     * on whether focus was moved successfuly.
-     */
-    function () {
+    FocusTrap.prototype.focusInitialElementWhenReady = function () {
         var _this = this;
         return new Promise(function (resolve) {
             _this._executeOnStable(function () { return resolve(_this.focusInitialElement()); });
@@ -1223,22 +951,10 @@ var FocusTrap = (function () {
     /**
      * Waits for the zone to stabilize, then focuses
      * the first tabbable element within the focus trap region.
-     * @returns Returns a promise that resolves with a boolean, depending
-     * on whether focus was moved successfuly.
-     */
-    /**
-     * Waits for the zone to stabilize, then focuses
-     * the first tabbable element within the focus trap region.
      * @return {?} Returns a promise that resolves with a boolean, depending
      * on whether focus was moved successfuly.
      */
-    FocusTrap.prototype.focusFirstTabbableElementWhenReady = /**
-     * Waits for the zone to stabilize, then focuses
-     * the first tabbable element within the focus trap region.
-     * @return {?} Returns a promise that resolves with a boolean, depending
-     * on whether focus was moved successfuly.
-     */
-    function () {
+    FocusTrap.prototype.focusFirstTabbableElementWhenReady = function () {
         var _this = this;
         return new Promise(function (resolve) {
             _this._executeOnStable(function () { return resolve(_this.focusFirstTabbableElement()); });
@@ -1247,22 +963,10 @@ var FocusTrap = (function () {
     /**
      * Waits for the zone to stabilize, then focuses
      * the last tabbable element within the focus trap region.
-     * @returns Returns a promise that resolves with a boolean, depending
-     * on whether focus was moved successfuly.
-     */
-    /**
-     * Waits for the zone to stabilize, then focuses
-     * the last tabbable element within the focus trap region.
      * @return {?} Returns a promise that resolves with a boolean, depending
      * on whether focus was moved successfuly.
      */
-    FocusTrap.prototype.focusLastTabbableElementWhenReady = /**
-     * Waits for the zone to stabilize, then focuses
-     * the last tabbable element within the focus trap region.
-     * @return {?} Returns a promise that resolves with a boolean, depending
-     * on whether focus was moved successfuly.
-     */
-    function () {
+    FocusTrap.prototype.focusLastTabbableElementWhenReady = function () {
         var _this = this;
         return new Promise(function (resolve) {
             _this._executeOnStable(function () { return resolve(_this.focusLastTabbableElement()); });
@@ -1273,27 +977,14 @@ var FocusTrap = (function () {
      * @param {?} bound The boundary to get (start or end of trapped region).
      * @return {?} The boundary element.
      */
-    FocusTrap.prototype._getRegionBoundary = /**
-     * Get the specified boundary element of the trapped region.
-     * @param {?} bound The boundary to get (start or end of trapped region).
-     * @return {?} The boundary element.
-     */
-    function (bound) {
-        if (!this._platform.isBrowser) {
-            return null;
-        }
+    FocusTrap.prototype._getRegionBoundary = function (bound) {
         // Contains the deprecated version of selector, for temporary backwards comparability.
-        var /** @type {?} */ markers = /** @type {?} */ (this._element.querySelectorAll("[cdk-focus-region-" + bound + "], " +
-            ("[cdkFocusRegion" + bound + "], ") +
+        var /** @type {?} */ markers = (this._element.querySelectorAll("[cdk-focus-region-" + bound + "], " +
             ("[cdk-focus-" + bound + "]")));
         for (var /** @type {?} */ i = 0; i < markers.length; i++) {
             if (markers[i].hasAttribute("cdk-focus-" + bound)) {
                 console.warn("Found use of deprecated attribute 'cdk-focus-" + bound + "'," +
-                    (" use 'cdkFocusRegion" + bound + "' instead."), markers[i]);
-            }
-            else if (markers[i].hasAttribute("cdk-focus-region-" + bound)) {
-                console.warn("Found use of deprecated attribute 'cdk-focus-region-" + bound + "'," +
-                    (" use 'cdkFocusRegion" + bound + "' instead."), markers[i]);
+                    (" use 'cdk-focus-region-" + bound + "' instead."), markers[i]);
             }
         }
         if (bound == 'start') {
@@ -1304,27 +995,10 @@ var FocusTrap = (function () {
     };
     /**
      * Focuses the element that should be focused when the focus trap is initialized.
-     * @returns Whether focus was moved successfuly.
+     * @return {?} Returns whether focus was moved successfuly.
      */
-    /**
-     * Focuses the element that should be focused when the focus trap is initialized.
-     * @return {?} Whether focus was moved successfuly.
-     */
-    FocusTrap.prototype.focusInitialElement = /**
-     * Focuses the element that should be focused when the focus trap is initialized.
-     * @return {?} Whether focus was moved successfuly.
-     */
-    function () {
-        if (!this._platform.isBrowser) {
-            return false;
-        }
-        // Contains the deprecated version of selector, for temporary backwards comparability.
-        var /** @type {?} */ redirectToElement = /** @type {?} */ (this._element.querySelector("[cdk-focus-initial], " +
-            "[cdkFocusInitial]"));
-        if (this._element.hasAttribute("cdk-focus-initial")) {
-            console.warn("Found use of deprecated attribute 'cdk-focus-initial'," +
-                " use 'cdkFocusInitial' instead.", this._element);
-        }
+    FocusTrap.prototype.focusInitialElement = function () {
+        var /** @type {?} */ redirectToElement = (this._element.querySelector('[cdk-focus-initial]'));
         if (redirectToElement) {
             redirectToElement.focus();
             return true;
@@ -1333,17 +1007,9 @@ var FocusTrap = (function () {
     };
     /**
      * Focuses the first tabbable element within the focus trap region.
-     * @returns Whether focus was moved successfuly.
+     * @return {?} Returns whether focus was moved successfuly.
      */
-    /**
-     * Focuses the first tabbable element within the focus trap region.
-     * @return {?} Whether focus was moved successfuly.
-     */
-    FocusTrap.prototype.focusFirstTabbableElement = /**
-     * Focuses the first tabbable element within the focus trap region.
-     * @return {?} Whether focus was moved successfuly.
-     */
-    function () {
+    FocusTrap.prototype.focusFirstTabbableElement = function () {
         var /** @type {?} */ redirectToElement = this._getRegionBoundary('start');
         if (redirectToElement) {
             redirectToElement.focus();
@@ -1352,17 +1018,9 @@ var FocusTrap = (function () {
     };
     /**
      * Focuses the last tabbable element within the focus trap region.
-     * @returns Whether focus was moved successfuly.
+     * @return {?} Returns whether focus was moved successfuly.
      */
-    /**
-     * Focuses the last tabbable element within the focus trap region.
-     * @return {?} Whether focus was moved successfuly.
-     */
-    FocusTrap.prototype.focusLastTabbableElement = /**
-     * Focuses the last tabbable element within the focus trap region.
-     * @return {?} Whether focus was moved successfuly.
-     */
-    function () {
+    FocusTrap.prototype.focusLastTabbableElement = function () {
         var /** @type {?} */ redirectToElement = this._getRegionBoundary('end');
         if (redirectToElement) {
             redirectToElement.focus();
@@ -1374,12 +1032,7 @@ var FocusTrap = (function () {
      * @param {?} root
      * @return {?}
      */
-    FocusTrap.prototype._getFirstTabbableElement = /**
-     * Get the first tabbable element from a DOM subtree (inclusive).
-     * @param {?} root
-     * @return {?}
-     */
-    function (root) {
+    FocusTrap.prototype._getFirstTabbableElement = function (root) {
         if (this._checker.isFocusable(root) && this._checker.isTabbable(root)) {
             return root;
         }
@@ -1401,12 +1054,7 @@ var FocusTrap = (function () {
      * @param {?} root
      * @return {?}
      */
-    FocusTrap.prototype._getLastTabbableElement = /**
-     * Get the last tabbable element from a DOM subtree (inclusive).
-     * @param {?} root
-     * @return {?}
-     */
-    function (root) {
+    FocusTrap.prototype._getLastTabbableElement = function (root) {
         if (this._checker.isFocusable(root) && this._checker.isTabbable(root)) {
             return root;
         }
@@ -1426,11 +1074,7 @@ var FocusTrap = (function () {
      * Creates an anchor element.
      * @return {?}
      */
-    FocusTrap.prototype._createAnchor = /**
-     * Creates an anchor element.
-     * @return {?}
-     */
-    function () {
+    FocusTrap.prototype._createAnchor = function () {
         var /** @type {?} */ anchor = document.createElement('div');
         anchor.tabIndex = this._enabled ? 0 : -1;
         anchor.classList.add('cdk-visually-hidden');
@@ -1442,17 +1086,12 @@ var FocusTrap = (function () {
      * @param {?} fn
      * @return {?}
      */
-    FocusTrap.prototype._executeOnStable = /**
-     * Executes a function when the zone is stable.
-     * @param {?} fn
-     * @return {?}
-     */
-    function (fn) {
+    FocusTrap.prototype._executeOnStable = function (fn) {
         if (this._ngZone.isStable) {
             fn();
         }
         else {
-            this._ngZone.onStable.asObservable().pipe(rxjs_operators_first.first()).subscribe(fn);
+            _angular_cdk_rxjs.first.call(this._ngZone.onStable.asObservable()).subscribe(fn);
         }
     };
     return FocusTrap;
@@ -1461,40 +1100,31 @@ var FocusTrap = (function () {
  * Factory that allows easy instantiation of focus traps.
  */
 var FocusTrapFactory = (function () {
+    /**
+     * @param {?} _checker
+     * @param {?} _platform
+     * @param {?} _ngZone
+     */
     function FocusTrapFactory(_checker, _platform, _ngZone) {
         this._checker = _checker;
         this._platform = _platform;
         this._ngZone = _ngZone;
     }
     /**
-     * Creates a focus-trapped region around the given element.
-     * @param element The element around which focus will be trapped.
-     * @param deferCaptureElements Defers the creation of focus-capturing elements to be done
-     *     manually by the user.
-     * @returns The created focus trap instance.
+     * @param {?} element
+     * @param {?=} deferAnchors
+     * @return {?}
      */
-    /**
-     * Creates a focus-trapped region around the given element.
-     * @param {?} element The element around which focus will be trapped.
-     * @param {?=} deferCaptureElements Defers the creation of focus-capturing elements to be done
-     *     manually by the user.
-     * @return {?} The created focus trap instance.
-     */
-    FocusTrapFactory.prototype.create = /**
-     * Creates a focus-trapped region around the given element.
-     * @param {?} element The element around which focus will be trapped.
-     * @param {?=} deferCaptureElements Defers the creation of focus-capturing elements to be done
-     *     manually by the user.
-     * @return {?} The created focus trap instance.
-     */
-    function (element, deferCaptureElements) {
-        if (deferCaptureElements === void 0) { deferCaptureElements = false; }
-        return new FocusTrap(element, this._platform, this._checker, this._ngZone, deferCaptureElements);
+    FocusTrapFactory.prototype.create = function (element, deferAnchors) {
+        if (deferAnchors === void 0) { deferAnchors = false; }
+        return new FocusTrap(element, this._platform, this._checker, this._ngZone, deferAnchors);
     };
     FocusTrapFactory.decorators = [
         { type: _angular_core.Injectable },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     FocusTrapFactory.ctorParameters = function () { return [
         { type: InteractivityChecker, },
         { type: _angular_cdk_platform.Platform, },
@@ -1504,26 +1134,29 @@ var FocusTrapFactory = (function () {
 }());
 /**
  * Directive for trapping focus within a region.
- * \@docs-private
  * @deprecated
  */
 var FocusTrapDeprecatedDirective = (function () {
+    /**
+     * @param {?} _elementRef
+     * @param {?} _focusTrapFactory
+     */
     function FocusTrapDeprecatedDirective(_elementRef, _focusTrapFactory) {
         this._elementRef = _elementRef;
         this._focusTrapFactory = _focusTrapFactory;
         this.focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement, true);
     }
     Object.defineProperty(FocusTrapDeprecatedDirective.prototype, "disabled", {
-        get: /**
+        /**
          * Whether the focus trap is active.
          * @return {?}
          */
-        function () { return !this.focusTrap.enabled; },
-        set: /**
+        get: function () { return !this.focusTrap.enabled; },
+        /**
          * @param {?} val
          * @return {?}
          */
-        function (val) {
+        set: function (val) {
             this.focusTrap.enabled = !_angular_cdk_coercion.coerceBooleanProperty(val);
         },
         enumerable: true,
@@ -1532,19 +1165,13 @@ var FocusTrapDeprecatedDirective = (function () {
     /**
      * @return {?}
      */
-    FocusTrapDeprecatedDirective.prototype.ngOnDestroy = /**
-     * @return {?}
-     */
-    function () {
+    FocusTrapDeprecatedDirective.prototype.ngOnDestroy = function () {
         this.focusTrap.destroy();
     };
     /**
      * @return {?}
      */
-    FocusTrapDeprecatedDirective.prototype.ngAfterContentInit = /**
-     * @return {?}
-     */
-    function () {
+    FocusTrapDeprecatedDirective.prototype.ngAfterContentInit = function () {
         this.focusTrap.attachAnchors();
     };
     FocusTrapDeprecatedDirective.decorators = [
@@ -1552,13 +1179,15 @@ var FocusTrapDeprecatedDirective = (function () {
                     selector: 'cdk-focus-trap',
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     FocusTrapDeprecatedDirective.ctorParameters = function () { return [
         { type: _angular_core.ElementRef, },
         { type: FocusTrapFactory, },
     ]; };
     FocusTrapDeprecatedDirective.propDecorators = {
-        "disabled": [{ type: _angular_core.Input },],
+        'disabled': [{ type: _angular_core.Input },],
     };
     return FocusTrapDeprecatedDirective;
 }());
@@ -1566,41 +1195,39 @@ var FocusTrapDeprecatedDirective = (function () {
  * Directive for trapping focus within a region.
  */
 var FocusTrapDirective = (function () {
+    /**
+     * @param {?} _elementRef
+     * @param {?} _focusTrapFactory
+     */
     function FocusTrapDirective(_elementRef, _focusTrapFactory) {
         this._elementRef = _elementRef;
         this._focusTrapFactory = _focusTrapFactory;
         this.focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement, true);
     }
     Object.defineProperty(FocusTrapDirective.prototype, "enabled", {
-        get: /**
+        /**
          * Whether the focus trap is active.
          * @return {?}
          */
-        function () { return this.focusTrap.enabled; },
-        set: /**
+        get: function () { return this.focusTrap.enabled; },
+        /**
          * @param {?} value
          * @return {?}
          */
-        function (value) { this.focusTrap.enabled = _angular_cdk_coercion.coerceBooleanProperty(value); },
+        set: function (value) { this.focusTrap.enabled = _angular_cdk_coercion.coerceBooleanProperty(value); },
         enumerable: true,
         configurable: true
     });
     /**
      * @return {?}
      */
-    FocusTrapDirective.prototype.ngOnDestroy = /**
-     * @return {?}
-     */
-    function () {
+    FocusTrapDirective.prototype.ngOnDestroy = function () {
         this.focusTrap.destroy();
     };
     /**
      * @return {?}
      */
-    FocusTrapDirective.prototype.ngAfterContentInit = /**
-     * @return {?}
-     */
-    function () {
+    FocusTrapDirective.prototype.ngAfterContentInit = function () {
         this.focusTrap.attachAnchors();
     };
     FocusTrapDirective.decorators = [
@@ -1609,24 +1236,25 @@ var FocusTrapDirective = (function () {
                     exportAs: 'cdkTrapFocus',
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     FocusTrapDirective.ctorParameters = function () { return [
         { type: _angular_core.ElementRef, },
         { type: FocusTrapFactory, },
     ]; };
     FocusTrapDirective.propDecorators = {
-        "enabled": [{ type: _angular_core.Input, args: ['cdkTrapFocus',] },],
+        'enabled': [{ type: _angular_core.Input, args: ['cdkTrapFocus',] },],
     };
     return FocusTrapDirective;
 }());
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
 var LIVE_ANNOUNCER_ELEMENT_TOKEN = new _angular_core.InjectionToken('liveAnnouncerElement');
 var LiveAnnouncer = (function () {
+    /**
+     * @param {?} elementToken
+     * @param {?} platform
+     */
     function LiveAnnouncer(elementToken, platform) {
         // Only do anything if we're on the browser platform.
         if (platform.isBrowser) {
@@ -1638,22 +1266,11 @@ var LiveAnnouncer = (function () {
     }
     /**
      * Announces a message to screenreaders.
-     * @param message Message to be announced to the screenreader
-     * @param politeness The politeness of the announcer element
-     */
-    /**
-     * Announces a message to screenreaders.
      * @param {?} message Message to be announced to the screenreader
      * @param {?=} politeness The politeness of the announcer element
      * @return {?}
      */
-    LiveAnnouncer.prototype.announce = /**
-     * Announces a message to screenreaders.
-     * @param {?} message Message to be announced to the screenreader
-     * @param {?=} politeness The politeness of the announcer element
-     * @return {?}
-     */
-    function (message, politeness) {
+    LiveAnnouncer.prototype.announce = function (message, politeness) {
         var _this = this;
         if (politeness === void 0) { politeness = 'polite'; }
         this._liveElement.textContent = '';
@@ -1669,10 +1286,7 @@ var LiveAnnouncer = (function () {
     /**
      * @return {?}
      */
-    LiveAnnouncer.prototype.ngOnDestroy = /**
-     * @return {?}
-     */
-    function () {
+    LiveAnnouncer.prototype.ngOnDestroy = function () {
         if (this._liveElement && this._liveElement.parentNode) {
             this._liveElement.parentNode.removeChild(this._liveElement);
         }
@@ -1680,10 +1294,7 @@ var LiveAnnouncer = (function () {
     /**
      * @return {?}
      */
-    LiveAnnouncer.prototype._createLiveElement = /**
-     * @return {?}
-     */
-    function () {
+    LiveAnnouncer.prototype._createLiveElement = function () {
         var /** @type {?} */ liveEl = document.createElement('div');
         liveEl.classList.add('cdk-visually-hidden');
         liveEl.setAttribute('aria-atomic', 'true');
@@ -1694,7 +1305,9 @@ var LiveAnnouncer = (function () {
     LiveAnnouncer.decorators = [
         { type: _angular_core.Injectable },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     LiveAnnouncer.ctorParameters = function () { return [
         { type: undefined, decorators: [{ type: _angular_core.Optional }, { type: _angular_core.Inject, args: [LIVE_ANNOUNCER_ELEMENT_TOKEN,] },] },
         { type: _angular_cdk_platform.Platform, },
@@ -1725,11 +1338,6 @@ var LIVE_ANNOUNCER_PROVIDER = {
     useFactory: LIVE_ANNOUNCER_PROVIDER_FACTORY
 };
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
 // that a value of around 650ms seems appropriate.
 var TOUCH_BUFFER_MS = 650;
@@ -1737,6 +1345,10 @@ var TOUCH_BUFFER_MS = 650;
  * Monitors mouse and keyboard events to determine the cause of focus events.
  */
 var FocusMonitor = (function () {
+    /**
+     * @param {?} _ngZone
+     * @param {?} _platform
+     */
     function FocusMonitor(_ngZone, _platform) {
         var _this = this;
         this._ngZone = _ngZone;
@@ -1757,29 +1369,13 @@ var FocusMonitor = (function () {
     }
     /**
      * Monitors focus on an element and applies appropriate CSS classes.
-     * @param element The element to monitor
-     * @param renderer The renderer to use to apply CSS classes to the element.
-     * @param checkChildren Whether to count the element as focused when its children are focused.
-     * @returns An observable that emits when the focus state of the element changes.
-     *     When the element is blurred, null will be emitted.
-     */
-    /**
-     * Monitors focus on an element and applies appropriate CSS classes.
      * @param {?} element The element to monitor
      * @param {?} renderer The renderer to use to apply CSS classes to the element.
      * @param {?} checkChildren Whether to count the element as focused when its children are focused.
      * @return {?} An observable that emits when the focus state of the element changes.
      *     When the element is blurred, null will be emitted.
      */
-    FocusMonitor.prototype.monitor = /**
-     * Monitors focus on an element and applies appropriate CSS classes.
-     * @param {?} element The element to monitor
-     * @param {?} renderer The renderer to use to apply CSS classes to the element.
-     * @param {?} checkChildren Whether to count the element as focused when its children are focused.
-     * @return {?} An observable that emits when the focus state of the element changes.
-     *     When the element is blurred, null will be emitted.
-     */
-    function (element, renderer, checkChildren) {
+    FocusMonitor.prototype.monitor = function (element, renderer, checkChildren) {
         var _this = this;
         // Do nothing if we're not on the browser platform.
         if (!this._platform.isBrowser) {
@@ -1789,7 +1385,7 @@ var FocusMonitor = (function () {
         if (this._elementInfo.has(element)) {
             var /** @type {?} */ cachedInfo = this._elementInfo.get(element); /** @type {?} */
             ((cachedInfo)).checkChildren = checkChildren;
-            return /** @type {?} */ ((cachedInfo)).subject.asObservable();
+            return ((cachedInfo)).subject.asObservable();
         }
         // Create monitored element info.
         var /** @type {?} */ info = {
@@ -1815,19 +1411,10 @@ var FocusMonitor = (function () {
     };
     /**
      * Stops monitoring an element and removes all focus classes.
-     * @param element The element to stop monitoring.
-     */
-    /**
-     * Stops monitoring an element and removes all focus classes.
      * @param {?} element The element to stop monitoring.
      * @return {?}
      */
-    FocusMonitor.prototype.stopMonitoring = /**
-     * Stops monitoring an element and removes all focus classes.
-     * @param {?} element The element to stop monitoring.
-     * @return {?}
-     */
-    function (element) {
+    FocusMonitor.prototype.stopMonitoring = function (element) {
         var /** @type {?} */ elementInfo = this._elementInfo.get(element);
         if (elementInfo) {
             elementInfo.unlisten();
@@ -1838,22 +1425,11 @@ var FocusMonitor = (function () {
     };
     /**
      * Focuses the element via the specified focus origin.
-     * @param element The element to focus.
-     * @param origin The focus origin.
-     */
-    /**
-     * Focuses the element via the specified focus origin.
      * @param {?} element The element to focus.
      * @param {?} origin The focus origin.
      * @return {?}
      */
-    FocusMonitor.prototype.focusVia = /**
-     * Focuses the element via the specified focus origin.
-     * @param {?} element The element to focus.
-     * @param {?} origin The focus origin.
-     * @return {?}
-     */
-    function (element, origin) {
+    FocusMonitor.prototype.focusVia = function (element, origin) {
         this._setOriginForCurrentEventQueue(origin);
         element.focus();
     };
@@ -1861,11 +1437,7 @@ var FocusMonitor = (function () {
      * Register necessary event listeners on the document and window.
      * @return {?}
      */
-    FocusMonitor.prototype._registerDocumentEvents = /**
-     * Register necessary event listeners on the document and window.
-     * @return {?}
-     */
-    function () {
+    FocusMonitor.prototype._registerDocumentEvents = function () {
         var _this = this;
         // Do nothing if we're not on the browser platform.
         if (!this._platform.isBrowser) {
@@ -1894,9 +1466,7 @@ var FocusMonitor = (function () {
             }
             _this._lastTouchTarget = event.target;
             _this._touchTimeout = setTimeout(function () { return _this._lastTouchTarget = null; }, TOUCH_BUFFER_MS);
-            // Note that we need to cast the event options to `any`, because at the time of writing
-            // (TypeScript 2.5), the built-in types don't support the `addEventListener` options param.
-        }, _angular_cdk_platform.supportsPassiveEventListeners() ? (/** @type {?} */ ({ passive: true, capture: true })) : true);
+        }, true);
         // Make a note of when the window regains focus, so we can restore the origin info for the
         // focused element.
         window.addEventListener('focus', function () {
@@ -1910,13 +1480,7 @@ var FocusMonitor = (function () {
      * @param {?=} origin The focus origin.
      * @return {?}
      */
-    FocusMonitor.prototype._setClasses = /**
-     * Sets the focus classes on the element based on the given focus origin.
-     * @param {?} element The element to update the classes on.
-     * @param {?=} origin The focus origin.
-     * @return {?}
-     */
-    function (element, origin) {
+    FocusMonitor.prototype._setClasses = function (element, origin) {
         var /** @type {?} */ elementInfo = this._elementInfo.get(element);
         if (elementInfo) {
             var /** @type {?} */ toggleClass = function (className, shouldSet) {
@@ -1935,12 +1499,7 @@ var FocusMonitor = (function () {
      * @param {?} origin The origin to set.
      * @return {?}
      */
-    FocusMonitor.prototype._setOriginForCurrentEventQueue = /**
-     * Sets the origin and schedules an async function to clear it at the end of the event queue.
-     * @param {?} origin The origin to set.
-     * @return {?}
-     */
-    function (origin) {
+    FocusMonitor.prototype._setOriginForCurrentEventQueue = function (origin) {
         var _this = this;
         this._origin = origin;
         setTimeout(function () { return _this._origin = null; }, 0);
@@ -1950,12 +1509,7 @@ var FocusMonitor = (function () {
      * @param {?} event The focus event to check.
      * @return {?} Whether the event was caused by a touch.
      */
-    FocusMonitor.prototype._wasCausedByTouch = /**
-     * Checks whether the given focus event was caused by a touchstart event.
-     * @param {?} event The focus event to check.
-     * @return {?} Whether the event was caused by a touch.
-     */
-    function (event) {
+    FocusMonitor.prototype._wasCausedByTouch = function (event) {
         // Note(mmalerba): This implementation is not quite perfect, there is a small edge case.
         // Consider the following dom structure:
         //
@@ -1983,13 +1537,7 @@ var FocusMonitor = (function () {
      * @param {?} element The monitored element.
      * @return {?}
      */
-    FocusMonitor.prototype._onFocus = /**
-     * Handles focus events on a registered element.
-     * @param {?} event The focus event.
-     * @param {?} element The monitored element.
-     * @return {?}
-     */
-    function (event, element) {
+    FocusMonitor.prototype._onFocus = function (event, element) {
         // NOTE(mmalerba): We currently set the classes based on the focus origin of the most recent
         // focus event affecting the monitored element. If we want to use the origin of the first event
         // instead we should check for the cdk-focused class here and return if the element already has
@@ -2024,22 +1572,11 @@ var FocusMonitor = (function () {
     };
     /**
      * Handles blur events on a registered element.
-     * @param event The blur event.
-     * @param element The monitored element.
-     */
-    /**
-     * Handles blur events on a registered element.
      * @param {?} event The blur event.
      * @param {?} element The monitored element.
      * @return {?}
      */
-    FocusMonitor.prototype._onBlur = /**
-     * Handles blur events on a registered element.
-     * @param {?} event The blur event.
-     * @param {?} element The monitored element.
-     * @return {?}
-     */
-    function (event, element) {
+    FocusMonitor.prototype._onBlur = function (event, element) {
         // If we are counting child-element-focus as focused, make sure that we aren't just blurring in
         // order to focus another child of the monitored element.
         var /** @type {?} */ elementInfo = this._elementInfo.get(element);
@@ -2053,7 +1590,9 @@ var FocusMonitor = (function () {
     FocusMonitor.decorators = [
         { type: _angular_core.Injectable },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     FocusMonitor.ctorParameters = function () { return [
         { type: _angular_core.NgZone, },
         { type: _angular_cdk_platform.Platform, },
@@ -2070,6 +1609,11 @@ var FocusMonitor = (function () {
  * 2) cdkMonitorSubtreeFocus: considers an element focused if it or any of its children are focused.
  */
 var CdkMonitorFocus = (function () {
+    /**
+     * @param {?} _elementRef
+     * @param {?} _focusMonitor
+     * @param {?} renderer
+     */
     function CdkMonitorFocus(_elementRef, _focusMonitor, renderer) {
         var _this = this;
         this._elementRef = _elementRef;
@@ -2081,10 +1625,7 @@ var CdkMonitorFocus = (function () {
     /**
      * @return {?}
      */
-    CdkMonitorFocus.prototype.ngOnDestroy = /**
-     * @return {?}
-     */
-    function () {
+    CdkMonitorFocus.prototype.ngOnDestroy = function () {
         this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
         this._monitorSubscription.unsubscribe();
     };
@@ -2093,14 +1634,16 @@ var CdkMonitorFocus = (function () {
                     selector: '[cdkMonitorElementFocus], [cdkMonitorSubtreeFocus]',
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     CdkMonitorFocus.ctorParameters = function () { return [
         { type: _angular_core.ElementRef, },
         { type: FocusMonitor, },
         { type: _angular_core.Renderer2, },
     ]; };
     CdkMonitorFocus.propDecorators = {
-        "cdkFocusChange": [{ type: _angular_core.Output },],
+        'cdkFocusChange': [{ type: _angular_core.Output },],
     };
     return CdkMonitorFocus;
 }());
@@ -2124,11 +1667,6 @@ var FOCUS_MONITOR_PROVIDER = {
     useFactory: FOCUS_MONITOR_PROVIDER_FACTORY
 };
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
 var A11yModule = (function () {
     function A11yModule() {
     }
@@ -2147,7 +1685,9 @@ var A11yModule = (function () {
                     ]
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     A11yModule.ctorParameters = function () { return []; };
     return A11yModule;
 }());

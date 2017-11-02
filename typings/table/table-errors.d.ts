@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -26,8 +26,3 @@ export declare function getTableMultipleDefaultRowDefsError(): Error;
  * @docs-private
  */
 export declare function getTableMissingMatchingRowDefError(): Error;
-/**
- * Returns an error to be thrown when there is no row definitions present in the content.
- * @docs-private
- */
-export declare function getTableMissingRowDefsError(): Error;

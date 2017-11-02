@@ -4,9 +4,9 @@
   "metadata": {},
   "exports": [
     {
-      "from": "./typings/index"
+      "from": "./rxjs/index"
     }
   ],
   "flatModuleIndexRedirect": true,
-  "importAs": "@angular/cdk/accordion"
+  "importAs": "@angular/cdk/rxjs"
 }

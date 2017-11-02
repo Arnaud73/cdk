@@ -1,13 +1,9 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
- */
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
  */
 /**
  * Coerces a data-bound value (typically a string) to a boolean.
@@ -18,10 +14,6 @@ function coerceBooleanProperty(value) {
     return value != null && "" + value !== 'false';
 }
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 /**
  * Coerces a data-bound value (typically a string) to a number.
  * @param {?} value
@@ -37,10 +29,6 @@ function coerceNumberProperty(value, fallbackValue) {
 }
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
  * Wraps the provided value in an array, unless the provided value is an array.
  * @template T
  * @param {?} value
@@ -50,15 +38,6 @@ function coerceArray(value) {
     return Array.isArray(value) ? value : [value];
 }
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 /**
  * Generated bundle index. Do not edit.
  */

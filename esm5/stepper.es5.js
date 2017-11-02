@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,16 +8,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, Directive, EventEmitter, Inject, Input, NgModule, Optional, Output, TemplateRef, ViewChild, ViewEncapsulation, forwardRef } from '@angular/core';
 import { ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@angular/cdk/keycodes';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import '@angular/forms';
 import { BidiModule, Directionality } from '@angular/cdk/bidi';
 import { CommonModule } from '@angular/common';
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
 var CdkStepLabel = (function () {
+    /**
+     * @param {?} template
+     */
     function CdkStepLabel(template) {
         this.template = template;
     }
@@ -26,17 +23,14 @@ var CdkStepLabel = (function () {
                     selector: '[cdkStepLabel]',
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     CdkStepLabel.ctorParameters = function () { return [
         { type: TemplateRef, },
     ]; };
     return CdkStepLabel;
 }());
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 
 /**
  * Used to generate unique ID for each stepper component.
@@ -51,6 +45,9 @@ var StepperSelectionEvent = (function () {
     return StepperSelectionEvent;
 }());
 var CdkStep = (function () {
+    /**
+     * @param {?} _stepper
+     */
     function CdkStep(_stepper) {
         this._stepper = _stepper;
         /**
@@ -62,84 +59,75 @@ var CdkStep = (function () {
         this._customCompleted = null;
     }
     Object.defineProperty(CdkStep.prototype, "editable", {
-        get: /**
-         * Whether the user can return to this step once it has been marked as complted.
+        /**
          * @return {?}
          */
-        function () { return this._editable; },
-        set: /**
+        get: function () { return this._editable; },
+        /**
          * @param {?} value
          * @return {?}
          */
-        function (value) {
+        set: function (value) {
             this._editable = coerceBooleanProperty(value);
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(CdkStep.prototype, "optional", {
-        get: /**
-         * Whether the completion of step is optional.
+        /**
+         * Whether the completion of step is optional or not.
          * @return {?}
          */
-        function () { return this._optional; },
-        set: /**
+        get: function () { return this._optional; },
+        /**
          * @param {?} value
          * @return {?}
          */
-        function (value) {
+        set: function (value) {
             this._optional = coerceBooleanProperty(value);
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(CdkStep.prototype, "completed", {
-        get: /**
-         * Whether step is marked as completed.
+        /**
+         * Return whether step is completed or not.
          * @return {?}
          */
-        function () {
+        get: function () {
             return this._customCompleted == null ? this._defaultCompleted : this._customCompleted;
         },
-        set: /**
+        /**
          * @param {?} value
          * @return {?}
          */
-        function (value) {
+        set: function (value) {
             this._customCompleted = coerceBooleanProperty(value);
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(CdkStep.prototype, "_defaultCompleted", {
-        get: /**
+        /**
          * @return {?}
          */
-        function () {
+        get: function () {
             return this.stepControl ? this.stepControl.valid && this.interacted : this.interacted;
         },
         enumerable: true,
         configurable: true
     });
-    /** Selects this step component. */
     /**
      * Selects this step component.
      * @return {?}
      */
-    CdkStep.prototype.select = /**
-     * Selects this step component.
-     * @return {?}
-     */
-    function () {
+    CdkStep.prototype.select = function () {
         this._stepper.selected = this;
     };
     /**
      * @return {?}
      */
-    CdkStep.prototype.ngOnChanges = /**
-     * @return {?}
-     */
-    function () {
+    CdkStep.prototype.ngOnChanges = function () {
         // Since basically all inputs of the MdStep get proxied through the view down to the
         // underlying MdStepHeader, we have to make sure that change detection runs correctly.
         this._stepper._stateChanged();
@@ -153,22 +141,28 @@ var CdkStep = (function () {
                     changeDetection: ChangeDetectionStrategy.OnPush,
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     CdkStep.ctorParameters = function () { return [
         { type: CdkStepper, decorators: [{ type: Inject, args: [forwardRef(function () { return CdkStepper; }),] },] },
     ]; };
     CdkStep.propDecorators = {
-        "stepLabel": [{ type: ContentChild, args: [CdkStepLabel,] },],
-        "content": [{ type: ViewChild, args: [TemplateRef,] },],
-        "stepControl": [{ type: Input },],
-        "label": [{ type: Input },],
-        "editable": [{ type: Input },],
-        "optional": [{ type: Input },],
-        "completed": [{ type: Input },],
+        'stepLabel': [{ type: ContentChild, args: [CdkStepLabel,] },],
+        'content': [{ type: ViewChild, args: [TemplateRef,] },],
+        'stepControl': [{ type: Input },],
+        'label': [{ type: Input },],
+        'editable': [{ type: Input },],
+        'optional': [{ type: Input },],
+        'completed': [{ type: Input },],
     };
     return CdkStep;
 }());
 var CdkStepper = (function () {
+    /**
+     * @param {?} _dir
+     * @param {?} _changeDetectorRef
+     */
     function CdkStepper(_dir, _changeDetectorRef) {
         this._dir = _dir;
         this._changeDetectorRef = _changeDetectorRef;
@@ -185,140 +179,102 @@ var CdkStepper = (function () {
         this._groupId = nextId++;
     }
     Object.defineProperty(CdkStepper.prototype, "linear", {
-        get: /**
+        /**
          * Whether the validity of previous steps should be checked or not.
          * @return {?}
          */
-        function () { return this._linear; },
-        set: /**
+        get: function () { return this._linear; },
+        /**
          * @param {?} value
          * @return {?}
          */
-        function (value) { this._linear = coerceBooleanProperty(value); },
+        set: function (value) { this._linear = coerceBooleanProperty(value); },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(CdkStepper.prototype, "selectedIndex", {
-        get: /**
+        /**
          * The index of the selected step.
          * @return {?}
          */
-        function () { return this._selectedIndex; },
-        set: /**
+        get: function () { return this._selectedIndex; },
+        /**
          * @param {?} index
          * @return {?}
          */
-        function (index) {
-            if (this._steps) {
-                if (this._anyControlsInvalid(index) || index < this._selectedIndex &&
-                    !this._steps.toArray()[index].editable) {
-                    // remove focus from clicked step header if the step is not able to be selected
-                    this._stepHeader.toArray()[index].nativeElement.blur();
-                }
-                else if (this._selectedIndex != index) {
-                    this._emitStepperSelectionEvent(index);
-                    this._focusIndex = this._selectedIndex;
-                }
+        set: function (index) {
+            if (this._anyControlsInvalid(index)
+                || index < this._selectedIndex && !this._steps.toArray()[index].editable) {
+                // remove focus from clicked step header if the step is not able to be selected
+                this._stepHeader.toArray()[index].nativeElement.blur();
             }
-            else {
-                this._selectedIndex = this._focusIndex = index;
+            else if (this._selectedIndex != index) {
+                this._emitStepperSelectionEvent(index);
+                this._focusIndex = this._selectedIndex;
             }
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(CdkStepper.prototype, "selected", {
-        get: /**
+        /**
          * The step that is selected.
          * @return {?}
          */
-        function () { return this._steps.toArray()[this.selectedIndex]; },
-        set: /**
+        get: function () { return this._steps.toArray()[this.selectedIndex]; },
+        /**
          * @param {?} step
          * @return {?}
          */
-        function (step) {
+        set: function (step) {
             this.selectedIndex = this._steps.toArray().indexOf(step);
         },
         enumerable: true,
         configurable: true
     });
-    /** Selects and focuses the next step in list. */
     /**
      * Selects and focuses the next step in list.
      * @return {?}
      */
-    CdkStepper.prototype.next = /**
-     * Selects and focuses the next step in list.
-     * @return {?}
-     */
-    function () {
+    CdkStepper.prototype.next = function () {
         this.selectedIndex = Math.min(this._selectedIndex + 1, this._steps.length - 1);
     };
-    /** Selects and focuses the previous step in list. */
     /**
      * Selects and focuses the previous step in list.
      * @return {?}
      */
-    CdkStepper.prototype.previous = /**
-     * Selects and focuses the previous step in list.
-     * @return {?}
-     */
-    function () {
+    CdkStepper.prototype.previous = function () {
         this.selectedIndex = Math.max(this._selectedIndex - 1, 0);
     };
-    /** Returns a unique id for each step label element. */
     /**
      * Returns a unique id for each step label element.
      * @param {?} i
      * @return {?}
      */
-    CdkStepper.prototype._getStepLabelId = /**
-     * Returns a unique id for each step label element.
-     * @param {?} i
-     * @return {?}
-     */
-    function (i) {
-        return "cdk-step-label-" + this._groupId + "-" + i;
+    CdkStepper.prototype._getStepLabelId = function (i) {
+        return "mat-step-label-" + this._groupId + "-" + i;
     };
-    /** Returns unique id for each step content element. */
     /**
      * Returns unique id for each step content element.
      * @param {?} i
      * @return {?}
      */
-    CdkStepper.prototype._getStepContentId = /**
-     * Returns unique id for each step content element.
-     * @param {?} i
-     * @return {?}
-     */
-    function (i) {
-        return "cdk-step-content-" + this._groupId + "-" + i;
+    CdkStepper.prototype._getStepContentId = function (i) {
+        return "mat-step-content-" + this._groupId + "-" + i;
     };
-    /** Marks the component to be change detected. */
     /**
      * Marks the component to be change detected.
      * @return {?}
      */
-    CdkStepper.prototype._stateChanged = /**
-     * Marks the component to be change detected.
-     * @return {?}
-     */
-    function () {
+    CdkStepper.prototype._stateChanged = function () {
         this._changeDetectorRef.markForCheck();
     };
-    /** Returns position state of the step with the given index. */
     /**
      * Returns position state of the step with the given index.
      * @param {?} index
      * @return {?}
      */
-    CdkStepper.prototype._getAnimationDirection = /**
-     * Returns position state of the step with the given index.
-     * @param {?} index
-     * @return {?}
-     */
-    function (index) {
+    CdkStepper.prototype._getAnimationDirection = function (index) {
         var /** @type {?} */ position = index - this._selectedIndex;
         if (position < 0) {
             return this._layoutDirection() === 'rtl' ? 'next' : 'previous';
@@ -328,18 +284,12 @@ var CdkStepper = (function () {
         }
         return 'current';
     };
-    /** Returns the type of icon to be displayed. */
     /**
      * Returns the type of icon to be displayed.
      * @param {?} index
      * @return {?}
      */
-    CdkStepper.prototype._getIndicatorType = /**
-     * Returns the type of icon to be displayed.
-     * @param {?} index
-     * @return {?}
-     */
-    function (index) {
+    CdkStepper.prototype._getIndicatorType = function (index) {
         var /** @type {?} */ step = this._steps.toArray()[index];
         if (!step.completed || this._selectedIndex == index) {
             return 'number';
@@ -352,11 +302,7 @@ var CdkStepper = (function () {
      * @param {?} newIndex
      * @return {?}
      */
-    CdkStepper.prototype._emitStepperSelectionEvent = /**
-     * @param {?} newIndex
-     * @return {?}
-     */
-    function (newIndex) {
+    CdkStepper.prototype._emitStepperSelectionEvent = function (newIndex) {
         var /** @type {?} */ stepsArray = this._steps.toArray();
         this.selectionChange.emit({
             selectedIndex: newIndex,
@@ -371,11 +317,7 @@ var CdkStepper = (function () {
      * @param {?} event
      * @return {?}
      */
-    CdkStepper.prototype._onKeydown = /**
-     * @param {?} event
-     * @return {?}
-     */
-    function (event) {
+    CdkStepper.prototype._onKeydown = function (event) {
         switch (event.keyCode) {
             case RIGHT_ARROW:
                 if (this._layoutDirection() === 'rtl') {
@@ -406,30 +348,20 @@ var CdkStepper = (function () {
     /**
      * @return {?}
      */
-    CdkStepper.prototype._focusNextStep = /**
-     * @return {?}
-     */
-    function () {
+    CdkStepper.prototype._focusNextStep = function () {
         this._focusStep((this._focusIndex + 1) % this._steps.length);
     };
     /**
      * @return {?}
      */
-    CdkStepper.prototype._focusPreviousStep = /**
-     * @return {?}
-     */
-    function () {
+    CdkStepper.prototype._focusPreviousStep = function () {
         this._focusStep((this._focusIndex + this._steps.length - 1) % this._steps.length);
     };
     /**
      * @param {?} index
      * @return {?}
      */
-    CdkStepper.prototype._focusStep = /**
-     * @param {?} index
-     * @return {?}
-     */
-    function (index) {
+    CdkStepper.prototype._focusStep = function (index) {
         this._focusIndex = index;
         this._stepHeader.toArray()[this._focusIndex].nativeElement.focus();
     };
@@ -437,25 +369,17 @@ var CdkStepper = (function () {
      * @param {?} index
      * @return {?}
      */
-    CdkStepper.prototype._anyControlsInvalid = /**
-     * @param {?} index
-     * @return {?}
-     */
-    function (index) {
-        var /** @type {?} */ steps = this._steps.toArray();
-        steps[this._selectedIndex].interacted = true;
+    CdkStepper.prototype._anyControlsInvalid = function (index) {
+        this._steps.toArray()[this._selectedIndex].interacted = true;
         if (this._linear && index >= 0) {
-            return steps.slice(0, index).some(function (step) { return step.stepControl && step.stepControl.invalid; });
+            return this._steps.toArray().slice(0, index).some(function (step) { return step.stepControl.invalid; });
         }
         return false;
     };
     /**
      * @return {?}
      */
-    CdkStepper.prototype._layoutDirection = /**
-     * @return {?}
-     */
-    function () {
+    CdkStepper.prototype._layoutDirection = function () {
         return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
     };
     CdkStepper.decorators = [
@@ -464,30 +388,30 @@ var CdkStepper = (function () {
                     exportAs: 'cdkStepper',
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     CdkStepper.ctorParameters = function () { return [
         { type: Directionality, decorators: [{ type: Optional },] },
         { type: ChangeDetectorRef, },
     ]; };
     CdkStepper.propDecorators = {
-        "_steps": [{ type: ContentChildren, args: [CdkStep,] },],
-        "linear": [{ type: Input },],
-        "selectedIndex": [{ type: Input },],
-        "selected": [{ type: Input },],
-        "selectionChange": [{ type: Output },],
+        '_steps': [{ type: ContentChildren, args: [CdkStep,] },],
+        'linear': [{ type: Input },],
+        'selectedIndex': [{ type: Input },],
+        'selected': [{ type: Input },],
+        'selectionChange': [{ type: Output },],
     };
     return CdkStepper;
 }());
 
 /**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
  * Button that moves to the next step in a stepper workflow.
  */
 var CdkStepperNext = (function () {
+    /**
+     * @param {?} _stepper
+     */
     function CdkStepperNext(_stepper) {
         this._stepper = _stepper;
     }
@@ -497,7 +421,9 @@ var CdkStepperNext = (function () {
                     host: { '(click)': '_stepper.next()' }
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     CdkStepperNext.ctorParameters = function () { return [
         { type: CdkStepper, },
     ]; };
@@ -507,6 +433,9 @@ var CdkStepperNext = (function () {
  * Button that moves to the previous step in a stepper workflow.
  */
 var CdkStepperPrevious = (function () {
+    /**
+     * @param {?} _stepper
+     */
     function CdkStepperPrevious(_stepper) {
         this._stepper = _stepper;
     }
@@ -516,17 +445,14 @@ var CdkStepperPrevious = (function () {
                     host: { '(click)': '_stepper.previous()' }
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     CdkStepperPrevious.ctorParameters = function () { return [
         { type: CdkStepper, },
     ]; };
     return CdkStepperPrevious;
 }());
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 
 var CdkStepperModule = (function () {
     function CdkStepperModule() {
@@ -538,20 +464,13 @@ var CdkStepperModule = (function () {
                     declarations: [CdkStep, CdkStepper, CdkStepLabel, CdkStepperNext, CdkStepperPrevious]
                 },] },
     ];
-    /** @nocollapse */
+    /**
+     * @nocollapse
+     */
     CdkStepperModule.ctorParameters = function () { return []; };
     return CdkStepperModule;
 }());
 
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 /**
  * Generated bundle index. Do not edit.
  */
